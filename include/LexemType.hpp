@@ -2,23 +2,30 @@
 #pragma once
 
 #include <iostream>
-#include <string>
-#include <regex>
-#include <vector>
 #include <map>
+#include <regex>
 #include <set>
+#include <string>
+#include <vector>
 
-class LexemType
-{
-private:
-	std::string type;
-	std::regex re;
-	std::vector <std::string> *keyWords;
+class LexemType {
 public:
-	LexemType(std::string _type, std::string _re);
-	LexemType(std::string _type, std::string _re, std::vector<std::string> *_keyWords);
-	std::string GetType();
-	std::regex GetRe();
-	int Index(std::string str);
-	void Add_Key_To_Array(std::string str);
+    LexemType(std::string type, std::string re);
+
+    LexemType(std::string type, std::string re, std::vector<std::string>* keyWords);
+
+    std::string getType() const;
+
+    std::regex getRe();
+
+    int index(std::string str) const;
+
+    void addKeyToArray(std::string str);
+
+private:
+    std::string m_type;
+
+    std::regex m_re;
+
+    std::vector<std::string>* m_keyWords;
 };

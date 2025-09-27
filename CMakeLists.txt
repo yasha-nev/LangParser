@@ -8,8 +8,8 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 include_directories(include)
 
 set(HEADERS
-    include/Event.hpp
-    include/Lexem_Analizator.hpp
+    include/EarleyItem.hpp
+    include/LexemAnalizator.hpp
     include/Lexem.hpp
     include/LexemType.hpp
     include/Parser.hpp
@@ -17,8 +17,8 @@ set(HEADERS
 
 set(SOURCES
     main.cpp
-    src/Event.cpp
-    src/Lexem_Analizator.cpp
+    src/EarleyItem.cpp
+    src/LexemAnalizator.cpp
     src/Lexem.cpp
     src/LexemType.cpp
     src/Parser.cpp

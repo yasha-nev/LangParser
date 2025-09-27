@@ -1,31 +1,53 @@
 #include "Lexem.hpp"
 
-void Lexem::Add_New_Key()
-{
-	type.Add_Key_To_Array(name);
+Lexem::Lexem(int pos, std::string name, LexemType lexemType):
+    m_pos(pos),
+    m_name(name),
+    m_type(lexemType) {
 }
 
-void Lexem::Print() {
-	std::cout << "----Token-----" << "\n";
-	std::cout << "name: " << name << "\n";
-	std::cout << "type: " << GetType() << "\n";
-	std::cout << "id: " << type.Index(name) << "\n";
-	std::cout << "--------------" << "\n";
-	std::cout << "\n";
+int Lexem::getPos() const {
+    return m_type.index(m_name);
 }
 
-std::string VectorToString(std::vector <std::string> &str) {
-	std::string a = "(";
-	for (size_t i = 0; i < str.size(); i++) {
-		a = a + str[i] + "|";
-	}
-	a.pop_back();
-	a = a + ")";
-	return a;
+int Lexem::getPosInRow() const {
+    return m_pos;
 }
 
-std::string operator+(std::string &left, std::string &right) {
-	std::string n = left;
-	n.append(right);
-	return n;
+std::string Lexem::getName() const {
+    return m_name;
+}
+
+std::string Lexem::getType() const {
+    return m_type.getType();
+}
+
+void Lexem::addNewKey() {
+    m_type.addKeyToArray(m_name);
+}
+
+std::ostream& operator<<(std::ostream& os, const Lexem& lexem) {
+    std::cout << "----Token-----" << "\n";
+    std::cout << "name: " << lexem.m_name << "\n";
+    std::cout << "type: " << lexem.getType() << "\n";
+    std::cout << "id: " << lexem.m_type.index(lexem.m_name) << "\n";
+    std::cout << "--------------" << "\n";
+    std::cout << "\n";
+    return os;
+}
+
+std::string VectorToString(std::vector<std::string>& str) {
+    std::string a = "(";
+    for(size_t i = 0; i < str.size(); i++) {
+        a = a + str[i] + "|";
+    }
+    a.pop_back();
+    a = a + ")";
+    return a;
+}
+
+std::string operator+(std::string& left, std::string& right) {
+    std::string n = left;
+    n.append(right);
+    return n;
 }
