@@ -1,0 +1,27 @@
+cmake_minimum_required(VERSION 3.10)
+
+project(LangParse)
+
+set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+include_directories(include)
+
+set(HEADERS
+    include/Event.hpp
+    include/Lexem_Analizator.hpp
+    include/lexem.hpp
+    include/LexemType.hpp
+    include/Parser.hpp
+)
+
+set(SOURCES
+    main.cpp
+    src/Event.cpp
+    src/Lexem_Analizator.cpp
+    src/lexem.cpp
+    src/LexemType.cpp
+    src/Parser.cpp
+)
+
+add_executable(${PROJECT_NAME} ${SOURCES} ${HEADERS})

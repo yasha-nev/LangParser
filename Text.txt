@@ -1,0 +1,7 @@
+{
+	a: %;
+	a ass 0;
+	while a < 5 do{
+		a ass a + 1;
+	 }
+}end
