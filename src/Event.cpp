@@ -1,6 +1,6 @@
 #include "Event.hpp"
 
-Event::Event(string _Vn, vector <string> _Rule, int _Point, int _Number) {
+Event::Event(std::string _Vn, std::vector <std::string> _Rule, int _Point, int _Number) {
 	Vn = _Vn;
 	Point = _Point;
 	Number = _Number;
@@ -39,26 +39,26 @@ void Event::MovePoint() {
 
 void Event::Print() const {
 	size_t n = Vn.size();
-	cout << Vn << "-> ";
+	std::cout << Vn << "-> ";
 	for (int i = 0; i < Rule.size(); i++) {
 		n += Rule[i].size() + 1;
 		if (Point == i) {
-			cout << "*";
+			std::cout << "*";
 		}
-		cout << Rule[i] << " ";
+		std::cout << Rule[i] << " ";
 	}
-	if (CheckEnd()) cout << "*";
-	cout << string(30 - n, ' ') << " | " << Point << " | " << Number << "\n";
+	if (CheckEnd()) std::cout << "*";
+	std::cout << std::string(30 - n, ' ') << " | " << Point << " | " << Number << "\n";
 }
 
-string Event::GetQueueRule() const{
+std::string Event::GetQueueRule() const{
 	if (CheckEnd() == 1) {
 		return "";
 	}
 	return Rule[Point];
 }
 
-vector<string> Event::GetRule() const
+std::vector<std::string> Event::GetRule() const
 {
 	return Rule;
 }

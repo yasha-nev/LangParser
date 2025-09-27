@@ -1,31 +1,33 @@
+
 #pragma once
+
 #include "LexemType.hpp"
 
 struct Words {
-	vector <string> operators;
-	vector <string> conditions;
-	vector <string> logic;
-	vector <string> types;
-	vector <string> keywords;
-	vector <string> end;
-	vector <string> programVariables;
+	std::vector <std::string> operators;
+	std::vector <std::string> conditions;
+	std::vector <std::string> logic;
+	std::vector <std::string> types;
+	std::vector <std::string> keywords;
+	std::vector <std::string> end;
+	std::vector <std::string> programVariables;
 };
 
-class lexem {
+class Lexem {
 private:
 	LexemType type;
-	string name;
+	std::string name;
 	int pos; //id in list
 
 public:
-	lexem(int _pos, string str, LexemType lt) : pos(_pos), name(str), type(lt) {}
+	Lexem(int _pos, std::string str, LexemType lt) : pos(_pos), name(str), type(lt) {}
 	int GetPos() { return type.Index(name); }
 	int GetPos_in_Row(){ return pos; }
-	string GetName() { return name;}
-	string GetType() { return type.GetType(); }
+	std::string GetName() { return name;}
+	std::string GetType() { return type.GetType(); }
 	void Add_New_Key();
 	void Print();
 };
 
-string VectorToString(vector <string> &str);
-string operator+(string &left, string &right);
+std::string VectorToString(std::vector <std::string> &str);
+std::string operator+(std::string &left, std::string &right);

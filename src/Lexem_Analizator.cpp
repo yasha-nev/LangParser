@@ -14,20 +14,20 @@ Lexem_Analizator::Lexem_Analizator(Words *_words) {
 	lexems.push_back(LexemType("SPACE", "^([\\s\\n\\t]+)"));
 }
 
-void Lexem_Analizator::Analize(string &str, int number_of_string) {
-	smatch m;
-	string sup_str = str;
+void Lexem_Analizator::Analize(std::string &str, int number_of_string) {
+	std::smatch m;
+	std::string sup_str = str;
 	while (str.size() != 0) {
 		bool a = 0;
 		for (size_t i = 0; i < lexems.size(); i++) {
 			if (regex_search(sup_str, m, lexems[i].GetRe())) {
 				if (lexems[i].GetType() != "SPACE") {
-					tokens.push_back(lexem(number_of_string, m[0].str(), lexems[i]));
+					tokens.push_back(Lexem(number_of_string, m[0].str(), lexems[i]));
 					//tokens[tokens.size() - 1].Print();
 				}
 
-				string pref_str = m.prefix().str();
-				string next_str = m.suffix().str();
+				std::string pref_str = m.prefix().str();
+				std::string next_str = m.suffix().str();
 				sup_str = pref_str + next_str;
 				a = 1;
 				break;
@@ -37,6 +37,6 @@ void Lexem_Analizator::Analize(string &str, int number_of_string) {
 	}
 }
 
-vector<lexem> *Lexem_Analizator::GetTokens() {
+std::vector<Lexem> *Lexem_Analizator::GetTokens() {
 	return &tokens;
 }

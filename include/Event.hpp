@@ -1,21 +1,23 @@
+
 #pragma once
-#include "lexem.hpp"
+
+#include "Lexem.hpp"
 
 class Event{
 private:
-	string Vn;
-	vector <string> Rule;
+	std::string Vn;
+	std::vector <std::string> Rule;
 	int Point;
 	int Number;
 public:
-	Event(string _Vn, vector <string> _Rule, int _Point, int _Number);
+	Event(std::string _Vn, std::vector <std::string> _Rule, int _Point, int _Number);
 	void MovePoint();
 	void Print() const;
 	
-	string GetVn() const { return Vn; }
+	std::string GetVn() const { return Vn; }
 	int GetNumber() const { return Number; }
-	string GetQueueRule() const;
-	vector <string> GetRule() const;
+	std::string GetQueueRule() const;
+	std::vector <std::string> GetRule() const;
 
 	bool operator <(const Event &right) const;
 	bool Compire(const Event &Eve) const;

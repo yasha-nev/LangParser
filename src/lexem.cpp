@@ -1,21 +1,21 @@
-#include "lexem.hpp"
+#include "Lexem.hpp"
 
-void lexem::Add_New_Key()
+void Lexem::Add_New_Key()
 {
 	type.Add_Key_To_Array(name);
 }
 
-void lexem::Print() {
-	cout << "----Token-----" << "\n";
-	cout << "name: " << name << "\n";
-	cout << "type: " << GetType() << "\n";
-	cout << "id: " << type.Index(name) << "\n";
-	cout << "--------------" << "\n";
-	cout << "\n";
+void Lexem::Print() {
+	std::cout << "----Token-----" << "\n";
+	std::cout << "name: " << name << "\n";
+	std::cout << "type: " << GetType() << "\n";
+	std::cout << "id: " << type.Index(name) << "\n";
+	std::cout << "--------------" << "\n";
+	std::cout << "\n";
 }
 
-string VectorToString(vector <string> &str) { //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ (...|...|...)
-	string a = "(";
+std::string VectorToString(std::vector <std::string> &str) {
+	std::string a = "(";
 	for (size_t i = 0; i < str.size(); i++) {
 		a = a + str[i] + "|";
 	}
@@ -24,8 +24,8 @@ string VectorToString(vector <string> &str) { //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿
 	return a;
 }
 
-string operator+(string &left, string &right) { //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ + ï¿½ï¿½ï¿½ string
-	string n = left;
+std::string operator+(std::string &left, std::string &right) {
+	std::string n = left;
 	n.append(right);
 	return n;
 }

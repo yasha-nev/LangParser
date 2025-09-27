@@ -1,13 +1,15 @@
+
 #pragma once
-#include "lexem.hpp"
+
+#include "Lexem.hpp"
 
 class Lexem_Analizator {
 private:
-	vector <LexemType> lexems;
-	vector <lexem> tokens;
+	std::vector <LexemType> lexems;
+	std::vector <Lexem> tokens;
 	Words *words;
 public:
 	Lexem_Analizator(Words *_words);
-	void Analize(string &str, int number_of_row);
-	vector<lexem> *GetTokens();
+	void Analize(std::string &str, int number_of_row);
+	std::vector<Lexem> *GetTokens();
 };

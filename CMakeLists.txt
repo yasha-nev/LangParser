@@ -10,7 +10,7 @@ include_directories(include)
 set(HEADERS
     include/Event.hpp
     include/Lexem_Analizator.hpp
-    include/lexem.hpp
+    include/Lexem.hpp
     include/LexemType.hpp
     include/Parser.hpp
 )
@@ -19,7 +19,7 @@ set(SOURCES
     main.cpp
     src/Event.cpp
     src/Lexem_Analizator.cpp
-    src/lexem.cpp
+    src/Lexem.cpp
     src/LexemType.cpp
     src/Parser.cpp
 )

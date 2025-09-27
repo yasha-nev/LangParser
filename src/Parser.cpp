@@ -1,7 +1,7 @@
 #include "Parser.hpp"
 #include <ctime>
 
-Parser::Parser(vector<lexem>* _Tokens)
+Parser::Parser(std::vector<Lexem>* _Tokens)
 {
 	Grammar["A"] = { "{ A0 } end" };
 	Grammar["A0"] = { "B", "D", "B A0", "D A0"};
@@ -18,8 +18,8 @@ Parser::Parser(vector<lexem>* _Tokens)
 
 void Parser::Parsing()
 {
-	Tokens->push_back(lexem((*Tokens)[Tokens->size() - 1].GetPos_in_Row(), "", LexemType("END", "")));
-	vector<set <Event>> D(Tokens->size() + 1);
+	Tokens->push_back(Lexem((*Tokens)[Tokens->size() - 1].GetPos_in_Row(), "", LexemType("END", "")));
+	std::vector<std::set <Event>> D(Tokens->size() + 1);
 	D[0].insert(Event("1A", { "A" }, 0, 0));
 	try {
 		for (size_t i = 0; i < Tokens->size() + 1; i++) {
@@ -35,28 +35,28 @@ void Parser::Parsing()
 				Predict(D[i], i);
 			}
 
-			cout << string(50, '-') << "\n";
-			if (i < (*Tokens).size()) cout << i << " " << (*Tokens)[i].GetName() << "\n";
+			std::cout << std::string(50, '-') << "\n";
+			if (i < (*Tokens).size()) std::cout << i << " " << (*Tokens)[i].GetName() << "\n";
 			for (const auto d : D[i]) {
 				d.Print();
 			}
-			cout << "\n";
+			std::cout << "\n";
 		}
 	}
 	catch (std::invalid_argument &ex) {
-		cout << "----- ERROR: " << ex.what() << "-----" << "\n";
+		std::cout << "----- ERROR: " << ex.what() << "-----" << "\n";
 		return;
 	}
 
-	cout << "----NO ERROR FOUND PROGRAM IS TRUE----" << "\n";
-	cout << "-------------Parse Tree---------------" << "\n";
+	std::cout << "----NO ERROR FOUND PROGRAM IS TRUE----" << "\n";
+	std::cout << "-------------Parse Tree---------------" << "\n";
 	for (const auto d : ParseTree) {
 		d.Print();
 	}
 	
 }
 
-void Parser::Scan(set <Event> &P_D, set <Event> &C_D, int pos){ //P = past, C - Current
+void Parser::Scan(std::set <Event> &P_D, std::set <Event> &C_D, int pos){ //P = past, C - Current
 	if (pos == 0) {
 		return;
 	}
@@ -90,26 +90,26 @@ void Parser::Scan(set <Event> &P_D, set <Event> &C_D, int pos){ //P = past, C - 
 		}
 		
 		if (EndEvent.Compire(d) == 1 && (*Tokens)[pos - 1].GetName() != "") {
-			throw  std::invalid_argument("Row " + to_string((*Tokens)[pos - 1].GetPos_in_Row()) + " symbols " + (*Tokens)[pos - 1].GetName() + " is not expected");
+			throw  std::invalid_argument("Row " + std::to_string((*Tokens)[pos - 1].GetPos_in_Row()) + " symbols " + (*Tokens)[pos - 1].GetName() + " is not expected");
 		}
 	}
 	if (C_D.size() == 0) {
-		string str;
+		std::string str;
 		for (const auto d : P_D) {
 			if (Grammar.count(d.GetQueueRule()) == 0 && d.GetQueueRule().size() != 0){
 				str = str + "," + d.GetQueueRule();
 			}
 		}
-		if (str.size() != 0) throw std::invalid_argument("Row " + to_string((*Tokens)[pos - 1].GetPos_in_Row()) + " " + str + " is expected");
-		throw std::invalid_argument("Row " + to_string((*Tokens)[pos - 1].GetPos_in_Row()) + " No symbols is expected");
+		if (str.size() != 0) throw std::invalid_argument("Row " + std::to_string((*Tokens)[pos - 1].GetPos_in_Row()) + " " + str + " is expected");
+		throw std::invalid_argument("Row " + std::to_string((*Tokens)[pos - 1].GetPos_in_Row()) + " No symbols is expected");
 	}
 }
 
-void Parser::Predict(set <Event> &D, int pos){
-	set<Event> D_sup;
+void Parser::Predict(std::set <Event> &D, int pos){
+	std::set<Event> D_sup;
 	for (const auto d : D) {
 		if (Grammar.count(d.GetQueueRule()) == 1) {
-			string sup = d.GetQueueRule();
+			std::string sup = d.GetQueueRule();
 			
 			for (int i = 0; i < Grammar[sup].size(); i++) {
 				Event _Event(sup, StringSplit(Grammar[sup][i]), 0, pos);
@@ -122,8 +122,8 @@ void Parser::Predict(set <Event> &D, int pos){
 	}
 }
 
-void Parser::Complite(vector <set <Event>> &D, int pos) {
-	set<Event> D_Sup;
+void Parser::Complite(std::vector <std::set <Event>> &D, int pos) {
+	std::set<Event> D_Sup;
 	for (const auto d : D[pos]) {
 		if (d.CheckEnd() == 0){
 			continue;
@@ -144,8 +144,8 @@ void Parser::Complite(vector <set <Event>> &D, int pos) {
 	}
 }
 
-vector<string> Parser::StringSplit(string str) {
-	vector<string> sup;
+std::vector<std::string> Parser::StringSplit(std::string str) {
+	std::vector<std::string> sup;
 	while (str.size() > 0) {
 		int i = str.find(" ");
 		if (i >= 0) {

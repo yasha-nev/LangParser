@@ -1,4 +1,6 @@
+
 #pragma once
+
 #include <iostream>
 #include <string>
 #include <regex>
@@ -6,19 +8,17 @@
 #include <map>
 #include <set>
 
-using namespace std;
-
 class LexemType
 {
 private:
-	string type;
-	regex re;
-	vector <string> *keyWords;
+	std::string type;
+	std::regex re;
+	std::vector <std::string> *keyWords;
 public:
-	LexemType(string _type, string _re);
-	LexemType(string _type, string _re, vector<string> *_keyWords);
-	string GetType();
-	regex GetRe();
-	int Index(string str);
-	void Add_Key_To_Array(string str);
+	LexemType(std::string _type, std::string _re);
+	LexemType(std::string _type, std::string _re, std::vector<std::string> *_keyWords);
+	std::string GetType();
+	std::regex GetRe();
+	int Index(std::string str);
+	void Add_Key_To_Array(std::string str);
 };
