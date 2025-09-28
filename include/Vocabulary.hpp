@@ -1,7 +1,10 @@
 #pragma once
 
+#include "nlohmann/json.hpp"
+
 #include <LexemCategory.hpp>
 #include <algorithm>
+#include <fstream>
 #include <regex>
 #include <string>
 #include <unordered_map>
@@ -10,6 +13,8 @@
 
 class Vocabulary {
 public:
+    void loadFromJson(const std::string& filePath);
+
     void addWord(LexemCategory category, const std::string& word);
 
     void addWords(LexemCategory category, std::initializer_list<std::string> wordList);

@@ -1,8 +1,21 @@
 #include "Lexer.hpp"
 
-Lexer::Lexer(std::vector<Lexem>& tokens, Vocabulary& vocabulary):
-    m_tokens(tokens),
+Lexer::Lexer(Vocabulary& vocabulary):
     m_vocabulary(vocabulary) {
+}
+
+void Lexer::fileCodeAnalysis(const std::string& filepath) {
+    std::fstream file(filepath, std::ios_base::in);
+    if(file.is_open()) {
+        int t = 0;
+        while(!file.eof()) {
+            std::string str;
+            std::getline(file, str);
+            tokenizeStringLine(str, t);
+            t++;
+        }
+    }
+    file.close();
 }
 
 void Lexer::tokenizeStringLine(const std::string& str, int numberOfString) {
@@ -47,4 +60,8 @@ void Lexer::tokenizeStringLine(const std::string& str, int numberOfString) {
             break;
         }
     }
+}
+
+const std::vector<Lexem>& Lexer::getTokens() {
+    return m_tokens;
 }

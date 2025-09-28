@@ -99,28 +99,12 @@ void Parser::throwUnexpectedToken(const Lexem& preToken, const std::set<EarleyIt
 
         throw std::invalid_argument(
             "Error: row " + std::to_string(preToken.getPositionInRow()) + ", symbol '" +
-            preToken.getName() + "': unexpected token; expected one of {" + missingRules + "}");
+            preToken.getName() + "': unexpected token; expected one of " + missingRules + "");
     }
 
     throw std::invalid_argument(
         "Error: row " + std::to_string(preToken.getPositionInRow()) + ", symbol '" +
         preToken.getName() + "': unexpected token; no symbols expected");
-}
-
-static std::vector<std::string> stringSplit(const std::string& str) {
-    std::vector<std::string> result;
-    size_t start = 0;
-    while(start < str.size()) {
-        size_t pos = str.find(' ', start);
-        if(pos == std::string::npos) {
-            pos = str.size();
-        }
-        if(pos > start) {
-            result.push_back(str.substr(start, pos - start));
-        }
-        start = pos + 1;
-    }
-    return result;
 }
 
 void Parser::predict(std::set<EarleyItem>& D, int pos) {
@@ -130,7 +114,7 @@ void Parser::predict(std::set<EarleyItem>& D, int pos) {
             std::string sup = d.getQueueRule();
 
             for(auto& rule: m_grammar.getRule(sup)) {
-                EarleyItem item(sup, stringSplit(rule), 0, pos);
+                EarleyItem item(sup, rule, 0, pos);
                 D_sup.insert(item);
             }
         }
