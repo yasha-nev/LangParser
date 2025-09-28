@@ -1,49 +1,63 @@
 #include "Lexem.hpp"
 
-Lexem::Lexem(int pos, std::string name, LexemType lexemType):
-    m_pos(pos),
+Lexem::Lexem(int position, int positionInRow, std::string name, LexemCategory type):
+    m_type(type),
     m_name(name),
-    m_type(lexemType) {
+    m_position(position),
+    m_positionInRow(positionInRow) {
 }
 
-int Lexem::getPos() const {
-    return m_type.index(m_name);
+int Lexem::getPosition() const {
+    return m_position;
 }
 
-int Lexem::getPosInRow() const {
-    return m_pos;
+int Lexem::getPositionInRow() const {
+    return m_positionInRow;
 }
 
 std::string Lexem::getName() const {
     return m_name;
 }
 
-std::string Lexem::getType() const {
-    return m_type.getType();
+LexemCategory Lexem::getType() const {
+    return m_type;
 }
 
-void Lexem::addNewKey() {
-    m_type.addKeyToArray(m_name);
+static std::string category2String(LexemCategory lexemCategory) {
+    switch(lexemCategory) {
+        case LexemCategory::OPERATOR:
+            return "OPERATOR";
+        case LexemCategory::CONDITION:
+            return "CONDITION";
+        case LexemCategory::LOGIC:
+            return "LOGIC";
+        case LexemCategory::TYPES:
+            return "TYPES";
+        case LexemCategory::KEYWORD:
+            return "KEYWORD";
+        case LexemCategory::END:
+            return "END";
+        case LexemCategory::END_WORDS:
+            return "END_WORDS";
+        case LexemCategory::VALUE:
+            return "VALUE";
+        case LexemCategory::SPACE:
+            return "SPACE";
+        case LexemCategory::VARIABLES:
+            return "VARIABLES";
+        default:
+            return "";
+    }
 }
 
 std::ostream& operator<<(std::ostream& os, const Lexem& lexem) {
     std::cout << "----Token-----" << "\n";
     std::cout << "name: " << lexem.m_name << "\n";
-    std::cout << "type: " << lexem.getType() << "\n";
-    std::cout << "id: " << lexem.m_type.index(lexem.m_name) << "\n";
+    std::cout << "type: " << category2String(lexem.m_type) << "\n";
+    std::cout << "id: " << lexem.getPosition() << "\n";
     std::cout << "--------------" << "\n";
     std::cout << "\n";
     return os;
-}
-
-std::string VectorToString(std::vector<std::string>& str) {
-    std::string a = "(";
-    for(size_t i = 0; i < str.size(); i++) {
-        a = a + str[i] + "|";
-    }
-    a.pop_back();
-    a = a + ")";
-    return a;
 }
 
 std::string operator+(std::string& left, std::string& right) {

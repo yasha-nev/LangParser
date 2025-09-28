@@ -3,6 +3,8 @@
 
 #include "Lexem.hpp"
 
+#include <iostream>
+
 class EarleyItem {
 
 public:

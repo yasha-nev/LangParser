@@ -2,11 +2,18 @@
 #pragma once
 
 #include "EarleyItem.hpp"
+#include "Lexem.hpp"
+
+#include <iostream>
+#include <map>
+#include <set>
+#include <string>
+#include <vector>
 
 class Parser {
 
 public:
-    Parser(std::vector<Lexem>* _Tokens);
+    Parser(std::vector<Lexem>& tokens);
 
     void parsing();
 
@@ -23,5 +30,5 @@ private:
 
     std::set<EarleyItem> m_parseTree;
 
-    std::vector<Lexem>* m_tokens;
+    std::vector<Lexem>& m_tokens;
 };

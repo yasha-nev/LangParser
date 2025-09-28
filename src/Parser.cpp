@@ -2,7 +2,8 @@
 
 #include <ctime>
 
-Parser::Parser(std::vector<Lexem>* tokens) {
+Parser::Parser(std::vector<Lexem>& tokens):
+    m_tokens(tokens) {
     m_grammar["A"] = { "{ A0 } end" };
     m_grammar["A0"] = { "B", "D", "B A0", "D A0" };
     m_grammar["B"] = { "C : TYPES ;", "B B" };
@@ -18,17 +19,16 @@ Parser::Parser(std::vector<Lexem>* tokens) {
                        "G <> G", "G > G", "G <= G", "G >= G",  "G" };
     m_grammar["G"] = { "H", "( G )", "G + G", "G - G", "G * G", "G \\ G" };
     m_grammar["H"] = { "VARIABLES", "VALUE", "not F" };
-
-    m_tokens = tokens;
 }
 
 void Parser::parsing() {
-    m_tokens->push_back(
-        Lexem((*m_tokens)[m_tokens->size() - 1].getPosInRow(), "", LexemType("END", "")));
-    std::vector<std::set<EarleyItem>> D(m_tokens->size() + 1);
+    m_tokens.push_back(
+        Lexem(-1, m_tokens[m_tokens.size() - 1].getPositionInRow(), "", LexemCategory::END));
+
+    std::vector<std::set<EarleyItem>> D(m_tokens.size() + 1);
     D[0].insert(EarleyItem("1A", { "A" }, 0, 0));
     try {
-        for(size_t i = 0; i < m_tokens->size() + 1; i++) {
+        for(size_t i = 0; i < m_tokens.size() + 1; i++) {
 
             if(i > 0) {
                 scan(D[i - 1], D[i], i);
@@ -42,8 +42,8 @@ void Parser::parsing() {
             }
 
             std::cout << std::string(50, '-') << "\n";
-            if(i < (*m_tokens).size()) {
-                std::cout << i << " " << (*m_tokens)[i].getName() << "\n";
+            if(i < m_tokens.size()) {
+                std::cout << i << " " << m_tokens[i].getName() << "\n";
             }
             for(const auto d: D[i]) {
                 std::cout << d << "\n";
@@ -69,16 +69,18 @@ void Parser::scan(
     if(pos == 0) {
         return;
     }
-    EarleyItem EndEvent("A", { "{", "A0", "}", "end" }, 4, 0);
+    EarleyItem endItem("A", { "{", "A0", "}", "end" }, 4, 0);
+    Lexem& currentToken = m_tokens[pos - 1];
+
     for(const auto d: P_D) {
-        if(d.getQueueRule() == (*m_tokens)[pos - 1].getName() ||
-           d.getQueueRule() == "TYPES" && (*m_tokens)[pos - 1].getType() == "TYPES" ||
-           d.getQueueRule() == "VALUE" && (*m_tokens)[pos - 1].getType() == "VALUE") {
-            EarleyItem _Event = d;
-            _Event.movePoint();
-            C_D.insert(_Event);
+        if(d.getQueueRule() == currentToken.getName() ||
+           d.getQueueRule() == "TYPES" && currentToken.getType() == LexemCategory::TYPES ||
+           d.getQueueRule() == "VALUE" && currentToken.getType() == LexemCategory::VALUE) {
+            EarleyItem item = d;
+            item.movePoint();
+            C_D.insert(item);
         } else if(
-            d.getQueueRule() == "VARIABLES" && (*m_tokens)[pos - 1].getType() == "VARIABLES") {
+            d.getQueueRule() == "VARIABLES" && currentToken.getType() == LexemCategory::VARIABLES) {
             bool a = 0;
             for(const auto d_sup: P_D) {
                 if(d_sup.getVn() == "B") {
@@ -87,20 +89,19 @@ void Parser::scan(
                 }
             }
             if(a == 1) {
-                (*m_tokens)[pos - 1].addNewKey();
-            } else if((*m_tokens)[pos - 1].getPos() == -1) {
-                throw std::invalid_argument(
-                    "Variable: " + (*m_tokens)[pos - 1].getName() + " not exist");
+                // currentToken.addNewKey();
+            } else if(currentToken.getPosition() == -1) {
+                throw std::invalid_argument("Variable: " + currentToken.getName() + " not exist");
             }
-            EarleyItem _Event = d;
-            _Event.movePoint();
-            C_D.insert(_Event);
+            EarleyItem item = d;
+            item.movePoint();
+            C_D.insert(item);
         }
 
-        if(EndEvent.compire(d) == 1 && (*m_tokens)[pos - 1].getName() != "") {
+        if(endItem.compire(d) == 1 && currentToken.getName() != "") {
             throw std::invalid_argument(
-                "Row " + std::to_string((*m_tokens)[pos - 1].getPosInRow()) + " symbols " +
-                (*m_tokens)[pos - 1].getName() + " is not expected");
+                "Row " + std::to_string(currentToken.getPositionInRow()) + " symbols " +
+                currentToken.getName() + " is not expected");
         }
     }
     if(C_D.size() == 0) {
@@ -112,12 +113,11 @@ void Parser::scan(
         }
         if(str.size() != 0) {
             throw std::invalid_argument(
-                "Row " + std::to_string((*m_tokens)[pos - 1].getPosInRow()) + " " + str +
+                "Row " + std::to_string(currentToken.getPositionInRow()) + " " + str +
                 " is expected");
         }
         throw std::invalid_argument(
-            "Row " + std::to_string((*m_tokens)[pos - 1].getPosInRow()) +
-            " No symbols is expected");
+            "Row " + std::to_string(currentToken.getPositionInRow()) + " No symbols is expected");
     }
 }
 
@@ -128,8 +128,8 @@ void Parser::predict(std::set<EarleyItem>& D, int pos) {
             std::string sup = d.getQueueRule();
 
             for(int i = 0; i < m_grammar[sup].size(); i++) {
-                EarleyItem _Event(sup, stringSplit(m_grammar[sup][i]), 0, pos);
-                D_sup.insert(_Event);
+                EarleyItem item(sup, stringSplit(m_grammar[sup][i]), 0, pos);
+                D_sup.insert(item);
             }
         }
     }
@@ -149,9 +149,9 @@ void Parser::complite(std::vector<std::set<EarleyItem>>& D, int pos) {
 
         for(const auto s: D[number]) {
             if(s.getQueueRule() == d.getVn()) {
-                EarleyItem _Event(s);
-                _Event.movePoint();
-                D_Sup.insert(_Event);
+                EarleyItem item(s);
+                item.movePoint();
+                D_Sup.insert(item);
             }
         }
     }

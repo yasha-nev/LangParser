@@ -1,42 +1,33 @@
 
 #pragma once
 
-#include "LexemType.hpp"
+#include "Vocabulary.hpp"
 
-struct Words {
-    std::vector<std::string> operators;
-    std::vector<std::string> conditions;
-    std::vector<std::string> logic;
-    std::vector<std::string> types;
-    std::vector<std::string> keywords;
-    std::vector<std::string> end;
-    std::vector<std::string> programVariables;
-};
+#include <LexemCategory.hpp>
+#include <iostream>
 
 class Lexem {
 public:
-    Lexem(int pos, std::string name, LexemType lexemType);
+    Lexem(int position, int positionInRow, std::string name, LexemCategory type);
 
-    int getPos() const;
+    int getPosition() const;
 
-    int getPosInRow() const;
+    int getPositionInRow() const;
 
     std::string getName() const;
 
-    std::string getType() const;
-
-    void addNewKey();
+    LexemCategory getType() const;
 
     friend std::ostream& operator<<(std::ostream& os, const Lexem& lexem);
 
 private:
-    LexemType m_type;
+    LexemCategory m_type;
 
     std::string m_name;
 
-    int m_pos; // id in list
-};
+    int m_position; // id in list
 
-std::string VectorToString(std::vector<std::string>& str);
+    int m_positionInRow; // position in string line
+};
 
 std::string operator+(std::string& left, std::string& right);
