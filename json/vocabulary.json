@@ -1,0 +1,13 @@
+{
+    "vocabulary" : {
+        "OPERATOR": ["-", "\\+", "/", "\\*"],
+        "CONDITION": ["<>", "=", ">=", "<=", "<", ">"],
+        "LOGIC": ["not", "or", "and"],
+        "TYPES": [ "%", "!", "\\$" ],
+        "KEYWORD": ["ass", "for", "while", "if", "then", "else", "to", "do", "read", "write", "begin", "end"],
+        "END": ["\\{", "\\}", ";", ":", "\\(", "\\)"],
+        "VARIABLES": ["[a-zA-Z]+"],
+        "VALUE": ["\\d+"],
+        "SPACE": ["[\\s\\n\\t]+"]
+    }
+}

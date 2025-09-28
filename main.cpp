@@ -1,43 +1,18 @@
-﻿#include "Grammar.hpp"
-#include "Lexer.hpp"
-#include "Parser.hpp"
-#include "Vocabulary.hpp"
-
-#include <fstream>
+﻿#include "Application.hpp"
 
 int main(int argc, char* argv[]) {
-    if(argc < 2) {
-        std::cout << "Not include file" << std::endl;
-        return 0;
+    if(argc < 4) {
+        std::cerr << "Usage: " << argv[0] << " <grammar.json> <vocab.json> <source.code>\n";
+        return 1;
     }
 
-    Vocabulary vocabulary;
-    Grammar grammar;
-    Lexer lexer(vocabulary);
-
-    vocabulary.loadFromJson("configuration.json");
-    grammar.loadFromJson("configuration.json");
-
-    lexer.fileCodeAnalysis(argv[1]);
-    auto tokens = lexer.getTokens();
-
-    for(int i = 0; i < tokens.size(); i++) {
-        std::cout << tokens[i] << "\n";
+    try {
+        Application app(argv[1], argv[2]);
+        app.run(argv[3]);
+    } catch(const std::exception& ex) {
+        std::cerr << "Error: " << ex.what() << "\n";
+        return 1;
     }
-
-    int k;
-
-    std::cout << "Continute" << "\n";
-    std::cin >> k;
-
-    Parser p(tokens, grammar);
-
-    p.parsing();
-
-    std::cout << "Continute" << "\n";
-    std::cin >> k;
-
-    p.printTree();
 
     return 0;
 }

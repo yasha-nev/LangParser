@@ -1,25 +1,5 @@
 #include "Grammar.hpp"
 
-void Grammar::loadFromJson(const std::string& filePath) {
-    std::ifstream file(filePath);
-    using json = nlohmann::json;
-
-    json j;
-    file >> j;
-
-    for(auto& it: j["rules"].items()) {
-        const std::string& lhs = it.key();
-        for(auto& alt: it.value()) {
-            std::vector<std::string> rhs;
-            for(auto& symbol: alt) {
-                rhs.push_back(symbol.get<std::string>());
-            }
-            m_rules[lhs].push_back(rhs);
-        }
-    }
-    file.close();
-}
-
 void Grammar::addRule(const std::string& rule, const std::vector<std::vector<std::string>>& rhs) {
     auto& vec = m_rules[rule];
     vec.insert(vec.end(), rhs.begin(), rhs.end());

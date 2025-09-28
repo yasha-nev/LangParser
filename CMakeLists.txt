@@ -18,23 +18,30 @@ FetchContent_Declare(
 FetchContent_MakeAvailable(nlohmann_json)
 
 set(HEADERS
+    include/Application.hpp
     include/EarleyItem.hpp
+    include/Grammar.hpp
+    include/GrammarLoader.hpp
     include/Lexer.hpp
     include/Lexem.hpp
     include/LexemCategory.hpp
     include/Parser.hpp
     include/Vocabulary.hpp
-    include/Grammar.hpp
+    include/VocabularyLoader.hpp
+    
 )
 
 set(SOURCES
     main.cpp
+    src/Application.cpp
     src/EarleyItem.cpp
+    src/Grammar.cpp
+    src/GrammarLoader.cpp
     src/Lexer.cpp
     src/Lexem.cpp
     src/Parser.cpp
     src/Vocabulary.cpp
-    src/Grammar.cpp
+    src/VocabularyLoader.cpp
 )
 
 add_executable(${PROJECT_NAME} ${SOURCES} ${HEADERS})

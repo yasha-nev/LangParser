@@ -5,17 +5,17 @@ Lexer::Lexer(Vocabulary& vocabulary):
 }
 
 void Lexer::fileCodeAnalysis(const std::string& filepath) {
-    std::fstream file(filepath, std::ios_base::in);
-    if(file.is_open()) {
-        int t = 0;
-        while(!file.eof()) {
-            std::string str;
-            std::getline(file, str);
-            tokenizeStringLine(str, t);
-            t++;
-        }
+    std::ifstream file(filepath);
+    if(!file) {
+        throw std::runtime_error("Cannot open file: " + filepath);
     }
-    file.close();
+
+    std::string line;
+    int lineNumber = 0;
+
+    while(std::getline(file, line)) {
+        tokenizeStringLine(line, lineNumber++);
+    }
 }
 
 void Lexer::tokenizeStringLine(const std::string& str, int numberOfString) {
@@ -62,6 +62,6 @@ void Lexer::tokenizeStringLine(const std::string& str, int numberOfString) {
     }
 }
 
-const std::vector<Lexem>& Lexer::getTokens() {
+std::vector<Lexem>& Lexer::getTokens() {
     return m_tokens;
 }
