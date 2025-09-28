@@ -14,6 +14,7 @@ set(HEADERS
     include/LexemCategory.hpp
     include/Parser.hpp
     include/Vocabulary.hpp
+    include/Grammar.hpp
 )
 
 set(SOURCES
@@ -23,6 +24,7 @@ set(SOURCES
     src/Lexem.cpp
     src/Parser.cpp
     src/Vocabulary.cpp
+    src/Grammar.cpp
 )
 
 add_executable(${PROJECT_NAME} ${SOURCES} ${HEADERS})

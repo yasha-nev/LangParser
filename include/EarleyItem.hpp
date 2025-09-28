@@ -20,9 +20,9 @@ public:
 
     void movePoint();
 
-    bool compire(const EarleyItem& Eve) const;
-
     bool checkEnd() const;
+
+    bool operator==(const EarleyItem& right) const;
 
     bool operator<(const EarleyItem& right) const;
 

@@ -2,23 +2,9 @@
 
 #include <ctime>
 
-Parser::Parser(std::vector<Lexem>& tokens):
-    m_tokens(tokens) {
-    m_grammar["A"] = { "{ A0 } end" };
-    m_grammar["A0"] = { "B", "D", "B A0", "D A0" };
-    m_grammar["B"] = { "C : TYPES ;", "B B" };
-    m_grammar["C"] = { "VARIABLES", "C , C" };
-    m_grammar["D"] = { "while F do { D }",
-                       "for E to G do { D }",
-                       "if F then { D }",
-                       "if F then { D } else { D }",
-                       "E",
-                       "D D" };
-    m_grammar["E"] = { "C ass G ;" };
-    m_grammar["F"] = { "F",      "( F )", "F or F", "F and F", "G = G", "G < G",
-                       "G <> G", "G > G", "G <= G", "G >= G",  "G" };
-    m_grammar["G"] = { "H", "( G )", "G + G", "G - G", "G * G", "G \\ G" };
-    m_grammar["H"] = { "VARIABLES", "VALUE", "not F" };
+Parser::Parser(std::vector<Lexem>& tokens, Grammar& grammar):
+    m_tokens(tokens),
+    m_grammar(grammar) {
 }
 
 void Parser::parsing() {
@@ -27,6 +13,7 @@ void Parser::parsing() {
 
     std::vector<std::set<EarleyItem>> D(m_tokens.size() + 1);
     D[0].insert(EarleyItem("1A", { "A" }, 0, 0));
+
     try {
         for(size_t i = 0; i < m_tokens.size() + 1; i++) {
 
@@ -34,21 +21,14 @@ void Parser::parsing() {
                 scan(D[i - 1], D[i], i);
             }
 
-            int k = -1;
-            while(D[i].size() != k) {
-                k = D[i].size();
+            size_t prevSize = 0;
+            do {
+                prevSize = D[i].size();
                 complite(D, i);
                 predict(D[i], i);
-            }
+            } while(D[i].size() != prevSize);
 
-            std::cout << std::string(50, '-') << "\n";
-            if(i < m_tokens.size()) {
-                std::cout << i << " " << m_tokens[i].getName() << "\n";
-            }
-            for(const auto d: D[i]) {
-                std::cout << d << "\n";
-            }
-            std::cout << "\n";
+            printLineScan(i, m_tokens[i], D[i]);
         }
     } catch(std::invalid_argument& ex) {
         std::cout << "----- ERROR: " << ex.what() << "-----" << "\n";
@@ -56,10 +36,16 @@ void Parser::parsing() {
     }
 
     std::cout << "----NO ERROR FOUND PROGRAM IS TRUE----" << "\n";
-    std::cout << "-------------Parse Tree---------------" << "\n";
-    for(const auto d: m_parseTree) {
+}
+
+void Parser::printLineScan(int line, const Lexem& token, std::set<EarleyItem>& D) {
+    std::cout << std::string(50, '-') << "\n";
+    std::cout << "line number: " << std::to_string(line) + " symbol: " << token.getName() << "\n\n";
+
+    for(const auto& d: D) {
         std::cout << d << "\n";
     }
+    std::cout << "\n";
 }
 
 void Parser::scan(
@@ -70,84 +56,100 @@ void Parser::scan(
         return;
     }
     EarleyItem endItem("A", { "{", "A0", "}", "end" }, 4, 0);
-    Lexem& currentToken = m_tokens[pos - 1];
+    Lexem& preToken = m_tokens[pos - 1];
 
-    for(const auto d: P_D) {
-        if(d.getQueueRule() == currentToken.getName() ||
-           d.getQueueRule() == "TYPES" && currentToken.getType() == LexemCategory::TYPES ||
-           d.getQueueRule() == "VALUE" && currentToken.getType() == LexemCategory::VALUE) {
-            EarleyItem item = d;
-            item.movePoint();
-            C_D.insert(item);
-        } else if(
-            d.getQueueRule() == "VARIABLES" && currentToken.getType() == LexemCategory::VARIABLES) {
-            bool a = 0;
-            for(const auto d_sup: P_D) {
-                if(d_sup.getVn() == "B") {
-                    a = 1;
-                    break;
-                }
-            }
-            if(a == 1) {
-                // currentToken.addNewKey();
-            } else if(currentToken.getPosition() == -1) {
-                throw std::invalid_argument("Variable: " + currentToken.getName() + " not exist");
-            }
+    for(const auto& d: P_D) {
+        if(d.getQueueRule() == preToken.getName() ||
+           d.getQueueRule() == "TYPES" && preToken.getType() == LexemCategory::TYPES ||
+           d.getQueueRule() == "VALUE" && preToken.getType() == LexemCategory::VALUE ||
+           d.getQueueRule() == "VARIABLES" && preToken.getType() == LexemCategory::VARIABLES) {
             EarleyItem item = d;
             item.movePoint();
             C_D.insert(item);
         }
 
-        if(endItem.compire(d) == 1 && currentToken.getName() != "") {
+        if(endItem == d && preToken.getName() != "") {
             throw std::invalid_argument(
-                "Row " + std::to_string(currentToken.getPositionInRow()) + " symbols " +
-                currentToken.getName() + " is not expected");
+                "Row " + std::to_string(preToken.getPositionInRow()) + " symbols " +
+                preToken.getName() + " is not expected");
         }
     }
-    if(C_D.size() == 0) {
-        std::string str;
-        for(const auto d: P_D) {
-            if(m_grammar.count(d.getQueueRule()) == 0 && d.getQueueRule().size() != 0) {
-                str = str + "," + d.getQueueRule();
+    if(C_D.empty()) {
+        throwUnexpectedToken(preToken, P_D);
+    }
+}
+
+void Parser::throwUnexpectedToken(const Lexem& preToken, const std::set<EarleyItem>& P_D) const {
+    std::set<std::string> missingRulesSet;
+    for(const auto& d: P_D) {
+        const std::string& rule = d.getQueueRule();
+        if(m_grammar.getCountElementsInRule(rule) == 0 && !rule.empty()) {
+            missingRulesSet.insert(rule);
+        }
+    }
+
+    if(!missingRulesSet.empty()) {
+        std::string missingRules;
+        for(const auto& rule: missingRulesSet) {
+            if(!missingRules.empty()) {
+                missingRules += ", ";
             }
+            missingRules += rule;
         }
-        if(str.size() != 0) {
-            throw std::invalid_argument(
-                "Row " + std::to_string(currentToken.getPositionInRow()) + " " + str +
-                " is expected");
-        }
+
         throw std::invalid_argument(
-            "Row " + std::to_string(currentToken.getPositionInRow()) + " No symbols is expected");
+            "Error: row " + std::to_string(preToken.getPositionInRow()) + ", symbol '" +
+            preToken.getName() + "': unexpected token; expected one of {" + missingRules + "}");
     }
+
+    throw std::invalid_argument(
+        "Error: row " + std::to_string(preToken.getPositionInRow()) + ", symbol '" +
+        preToken.getName() + "': unexpected token; no symbols expected");
+}
+
+static std::vector<std::string> stringSplit(const std::string& str) {
+    std::vector<std::string> result;
+    size_t start = 0;
+    while(start < str.size()) {
+        size_t pos = str.find(' ', start);
+        if(pos == std::string::npos) {
+            pos = str.size();
+        }
+        if(pos > start) {
+            result.push_back(str.substr(start, pos - start));
+        }
+        start = pos + 1;
+    }
+    return result;
 }
 
 void Parser::predict(std::set<EarleyItem>& D, int pos) {
     std::set<EarleyItem> D_sup;
-    for(const auto d: D) {
-        if(m_grammar.count(d.getQueueRule()) == 1) {
+    for(const auto& d: D) {
+        if(m_grammar.getCountElementsInRule(d.getQueueRule()) == 1) {
             std::string sup = d.getQueueRule();
 
-            for(int i = 0; i < m_grammar[sup].size(); i++) {
-                EarleyItem item(sup, stringSplit(m_grammar[sup][i]), 0, pos);
+            for(auto& rule: m_grammar.getRule(sup)) {
+                EarleyItem item(sup, stringSplit(rule), 0, pos);
                 D_sup.insert(item);
             }
         }
     }
-    for(const auto d: D_sup) {
+
+    for(const auto& d: D_sup) {
         D.insert(d);
     }
 }
 
 void Parser::complite(std::vector<std::set<EarleyItem>>& D, int pos) {
     std::set<EarleyItem> D_Sup;
-    for(const auto d: D[pos]) {
+    for(const auto& d: D[pos]) {
         if(d.checkEnd() == 0) {
             continue;
         }
         m_parseTree.insert(d);
-        int number = d.getNumber();
 
-        for(const auto s: D[number]) {
+        for(const auto& s: D[d.getNumber()]) {
             if(s.getQueueRule() == d.getVn()) {
                 EarleyItem item(s);
                 item.movePoint();
@@ -155,22 +157,15 @@ void Parser::complite(std::vector<std::set<EarleyItem>>& D, int pos) {
             }
         }
     }
-    for(const auto d: D_Sup) {
+
+    for(const auto& d: D_Sup) {
         D[pos].insert(d);
     }
 }
 
-std::vector<std::string> Parser::stringSplit(std::string str) {
-    std::vector<std::string> sup;
-    while(str.size() > 0) {
-        int i = str.find(" ");
-        if(i >= 0) {
-            sup.push_back(str.substr(0, i));
-            str = str.substr(i + 1);
-        } else {
-            sup.push_back(str);
-            str = "";
-        }
+void Parser::printTree() {
+    std::cout << "-------------Parse Tree---------------" << "\n";
+    for(const auto& d: m_parseTree) {
+        std::cout << d << "\n";
     }
-    return sup;
 }
