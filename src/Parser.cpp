@@ -28,14 +28,18 @@ void Parser::parsing() {
                 predict(D[i], i);
             } while(D[i].size() != prevSize);
 
-            printLineScan(i, m_tokens[i], D[i]);
+            if(i > m_tokens.size()) {
+                printLineScan(i, m_tokens[i], D[i]);
+            }
         }
     } catch(std::invalid_argument& ex) {
-        std::cout << "----- ERROR: " << ex.what() << "-----" << "\n";
+        std::cout << "----- ERROR: " << ex.what() << "-----"
+                  << "\n";
         return;
     }
 
-    std::cout << "----NO ERROR FOUND PROGRAM IS TRUE----" << "\n";
+    std::cout << "----NO ERROR FOUND PROGRAM IS TRUE----"
+              << "\n";
 }
 
 void Parser::printLineScan(int line, const Lexem& token, std::set<EarleyItem>& D) {
@@ -148,7 +152,8 @@ void Parser::complite(std::vector<std::set<EarleyItem>>& D, int pos) {
 }
 
 void Parser::printTree() {
-    std::cout << "-------------Parse Tree---------------" << "\n";
+    std::cout << "-------------Parse Tree---------------"
+              << "\n";
     for(const auto& d: m_parseTree) {
         std::cout << d << "\n";
     }

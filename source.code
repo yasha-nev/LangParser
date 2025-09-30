@@ -1,7 +1,6 @@
 {
-	a: %;
-	a ass 0;
-	while a < 5 do{
-		a ass a + 1;
-	 }
-}end
+	a, b, c: int;
+	a = 5;
+	b = 10;
+	c = a + b;
+}

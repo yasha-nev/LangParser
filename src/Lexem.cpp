@@ -51,11 +51,13 @@ static std::string category2String(LexemCategory lexemCategory) {
 }
 
 std::ostream& operator<<(std::ostream& os, const Lexem& lexem) {
-    std::cout << "----Token-----" << "\n";
+    std::cout << "----Token-----"
+              << "\n";
     std::cout << "name: " << lexem.m_name << "\n";
     std::cout << "type: " << category2String(lexem.m_type) << "\n";
     std::cout << "id: " << lexem.getPosition() << "\n";
-    std::cout << "--------------" << "\n";
+    std::cout << "--------------"
+              << "\n";
     std::cout << "\n";
     return os;
 }
