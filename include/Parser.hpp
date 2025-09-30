@@ -11,9 +11,17 @@
 #include <string>
 #include <vector>
 
+/**
+ * @class Parser
+ * @brief Performs syntactic analysis using the Earley algorithm.
+ */
 class Parser {
-
 public:
+    /**
+     * @brief Constructs the parser.
+     * @param tokens Reference to a list of tokens.
+     * @param grammar Reference to the grammar object.
+     */
     Parser(std::vector<Lexem>& tokens, Grammar& grammar);
 
     void parsing();

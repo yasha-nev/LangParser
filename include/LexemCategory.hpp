@@ -1,5 +1,9 @@
 #pragma once
 
+/**
+ * @enum LexemCategory
+ * @brief Defines categories of lexical tokens.
+ */
 enum class LexemCategory {
     OPERATOR,
     CONDITION,
