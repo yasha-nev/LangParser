@@ -78,12 +78,12 @@ bool EarleyItem::operator==(const EarleyItem& right) const {
 bool EarleyItem::operator<(const EarleyItem& right) const {
     if(this->m_number != right.m_number) {
         return this->m_number < right.m_number;
+    } else if(this->m_vn != right.m_vn) {
+        return (this->m_vn < right.m_vn);
     } else if(this->m_rule[0] != right.m_rule[0]) {
         return this->m_rule[0] < right.m_rule[0];
     } else if(this->m_rule.size() != right.m_rule.size()) {
         return (this->m_rule.size() > right.m_rule.size());
-    } else if(this->m_vn != right.m_vn) {
-        return (this->m_vn < right.m_vn);
     } else {
         for(size_t i = 0; i < m_rule.size(); i++) {
             if((this->m_rule[i] != right.m_rule[i])) {

@@ -27,10 +27,6 @@ void Parser::parsing() {
                 complite(D, i);
                 predict(D[i], i);
             } while(D[i].size() != prevSize);
-
-            if(i > m_tokens.size()) {
-                printLineScan(i, m_tokens[i], D[i]);
-            }
         }
     } catch(std::invalid_argument& ex) {
         std::cout << "----- ERROR: " << ex.what() << "-----"
@@ -113,6 +109,7 @@ void Parser::throwUnexpectedToken(const Lexem& preToken, const std::set<EarleyIt
 
 void Parser::predict(std::set<EarleyItem>& D, int pos) {
     std::set<EarleyItem> D_sup;
+
     for(const auto& d: D) {
         if(m_grammar.getCountElementsInRule(d.getQueueRule()) == 1) {
             std::string sup = d.getQueueRule();
@@ -131,6 +128,7 @@ void Parser::predict(std::set<EarleyItem>& D, int pos) {
 
 void Parser::complite(std::vector<std::set<EarleyItem>>& D, int pos) {
     std::set<EarleyItem> D_Sup;
+
     for(const auto& d: D[pos]) {
         if(d.checkEnd() == 0) {
             continue;
