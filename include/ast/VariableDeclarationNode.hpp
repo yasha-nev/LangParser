@@ -12,23 +12,20 @@ std::string declarationTypeToString(DeclaretionType type);
 
 class VariableDeclarationNode: public ASTNode {
 public:
-    VariableDeclarationNode(int deep);
+    VariableDeclarationNode();
 
-    VariableDeclarationNode(int deep, DeclaretionType variable_type);
+    VariableDeclarationNode(DeclaretionType variable_type);
 
-    ASTNode *process(ASTNode *parent, const EarleyItem &eItem, int deep) override;
+    const std::list<std::unique_ptr<ASTNode>>& getNodes() override;
 
     void addNode(std::unique_ptr<ASTNode> node) override;
 
-    void printNode() override;
+    void printNode(int deep) override;
 
     void setVariablesType(DeclaretionType type);
-
-    const std::list<std::unique_ptr<ASTNode>>& getVariables();
 
     DeclaretionType getVariablesType();
 
 private:
-    std::list<std::unique_ptr<ASTNode>> m_variables;
     DeclaretionType m_variableType;
 };

@@ -5,13 +5,13 @@
 
 class ValueNode: public ASTNode {
 public:
-    ValueNode(int deep, DeclaretionType type, const std::string& value);
+    ValueNode(DeclaretionType type, const std::string& value);
 
-    ASTNode *process(ASTNode *parent, const EarleyItem &eItem, int deep) override;
+    const std::list<std::unique_ptr<ASTNode>>& getNodes() override;
 
     void addNode(std::unique_ptr<ASTNode> node) override;
 
-    void printNode() override;
+    void printNode(int deep) override;
 
     void setValue(const std::string& value);
 

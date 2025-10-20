@@ -1,10 +1,10 @@
 #pragma once
 
-#include "ast/Ast.hpp"
 #include "Grammar.hpp"
 #include "Lexer.hpp"
 #include "Parser.hpp"
 #include "Vocabulary.hpp"
+#include "ast/Ast.hpp"
 
 #include <string>
 

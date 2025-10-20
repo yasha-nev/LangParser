@@ -4,15 +4,15 @@
 
 class VariableNode: public ASTNode {
 public:
-    VariableNode(int deep);
+    VariableNode();
 
-    VariableNode(int deep, const std::string& variable);
+    VariableNode(const std::string& variable);
 
-    ASTNode *process(ASTNode *parent, const EarleyItem &eItem, int deep) override;
+    const std::list<std::unique_ptr<ASTNode>>& getNodes() override;
 
     void addNode(std::unique_ptr<ASTNode> node) override;
 
-    void printNode() override;
+    void printNode(int deep) override;
 
     void setVariable(const std::string& value);
 

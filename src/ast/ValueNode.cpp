@@ -1,22 +1,22 @@
 #include "ast/ValueNode.hpp"
 
-ValueNode::ValueNode(int deep, DeclaretionType type, const std::string& value):
-    ASTNode(deep),
+ValueNode::ValueNode(DeclaretionType type, const std::string& value):
+    ASTNode(),
     m_valueType(type),
     m_value(value) {
     m_nodeType = ASTNodeType::VALUE;
 }
 
-ASTNode *ValueNode::process(ASTNode *parent, const EarleyItem &eItem, int deep) {
-
+const std::list<std::unique_ptr<ASTNode>>& ValueNode::getNodes() {
+    return m_nodes;
 }
 
 void ValueNode::addNode(std::unique_ptr<ASTNode> node) {
-
 }
 
-void ValueNode::printNode() {
-    std::cout << "|" << std::string(m_deep, '-') << "- Value:" << m_value << " : " << declarationTypeToString(m_valueType) << "\n";
+void ValueNode::printNode(int deep) {
+    std::cout << "|" << std::string(deep, '-') << " Value: " << m_value << " : "
+              << declarationTypeToString(m_valueType) << "\n";
 }
 
 void ValueNode::setValue(const std::string& value) {
@@ -34,4 +34,3 @@ void ValueNode::setValueType(DeclaretionType valueType) {
 DeclaretionType ValueNode::getValueType() {
     return m_valueType;
 }
-
