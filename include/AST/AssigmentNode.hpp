@@ -1,22 +1,24 @@
 #pragma once
 
-#include "ArithmeticExpressionNode.hpp"
 #include "Ast.hpp"
-#include "VariableNode.hpp"
 
 class AssigmentNode: public ASTNode {
 public:
-    AssigmentNode();
+    AssigmentNode(int deep);
 
-    AssigmentNode(std::unique_ptr<ArithmeticExpressionNode> expression);
+    ASTNode *process(ASTNode *parent, const EarleyItem &eItem, int deep) override;
 
-    void addVariable(std::unique_ptr<VariableNode> variable);
+    void addNode(std::unique_ptr<ASTNode> node) override;
 
-    const std::list<std::unique_ptr<VariableNode>>& getVariables();
+    void printNode() override;
 
-    void setArithmeticExpression(std::unique_ptr<ArithmeticExpressionNode> node);
+    const std::list<std::unique_ptr<ASTNode>>& getVariables();
+
+    const std::unique_ptr<ASTNode> &getExpression();
+
+    
 
 private:
-    std::list<std::unique_ptr<VariableNode>> m_variables;
-    std::unique_ptr<ArithmeticExpressionNode> m_expression;
+    std::list<std::unique_ptr<ASTNode>> m_variables;
+    std::unique_ptr<ASTNode> m_expression;
 };

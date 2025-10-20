@@ -1,28 +1,27 @@
+#pragma once
 
 #include "Ast.hpp"
-#include "ValueNode.hpp"
 
 class ArithmeticExpressionNode: public ASTNode {
 public:
-    ArithmeticExpressionNode();
+    ArithmeticExpressionNode(int deep);
 
-    ArithmeticExpressionNode(const std::string& op);
+    ASTNode *process(ASTNode *parent, const EarleyItem &eItem, int deep) override;
 
-    ArithmeticExpressionNode(
-        const std::string& op,
-        std::unique_ptr<ValueNode> param,
-        std::unique_ptr<ArithmeticExpressionNode> m_expression);
+    void addNode(std::unique_ptr<ASTNode> node) override;
 
-    void setParam(std::unique_ptr<ValueNode> param);
+    void printNode() override;
 
-    const std::unique_ptr<ValueNode>& getParam();
+    void setOperator(const std::string &op);
 
-    void setExpression(std::unique_ptr<ArithmeticExpressionNode> expression);
+    const std::unique_ptr<ASTNode>& getParam();
 
-    const std::unique_ptr<ArithmeticExpressionNode>& getExpression();
+    const std::unique_ptr<ASTNode>& getExpression();
+
+    
 
 private:
-    std::unique_ptr<ValueNode> m_param;
+    std::unique_ptr<ASTNode> m_param;
     std::string m_operator; // + - * /
-    std::unique_ptr<ArithmeticExpressionNode> m_expression;
+    std::unique_ptr<ASTNode> m_expression;
 };

@@ -28,6 +28,8 @@ public:
 
     void printTree();
 
+    std::set<EarleyItem>& getParserOutput();
+
 private:
     void scan(std::set<EarleyItem>& P_D, std::set<EarleyItem>& C_D, int pos);
 

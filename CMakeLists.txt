@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.10)
 
 project(LangParse)
 
-set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 include_directories(include)
@@ -28,13 +28,13 @@ set(HEADERS
   include/Parser.hpp
   include/Vocabulary.hpp
   include/VocabularyLoader.hpp
-  include/AST/Ast.hpp
-  include/AST/RootNode.hpp
-  include/AST/ValueNode.hpp
-  include/AST/VariableNode.hpp
-  include/AST/VariableDeclarationNode.hpp
-  include/AST/AssigmentNode.hpp
-  include/AST/ArithmeticExpressionNode.hpp
+  include/ast/Ast.hpp
+  include/ast/RootNode.hpp
+  include/ast/ValueNode.hpp
+  include/ast/VariableNode.hpp
+  include/ast/VariableDeclarationNode.hpp
+  include/ast/AssigmentNode.hpp
+  include/ast/ArithmeticExpressionNode.hpp
 )
 
 set(SOURCES
@@ -48,13 +48,13 @@ set(SOURCES
   src/Parser.cpp
   src/Vocabulary.cpp
   src/VocabularyLoader.cpp
-  src/AST/Ast.cpp
-  src/AST/RootNode.cpp
-  src/AST/ValueNode.cpp
-  src/AST/VariableNode.cpp
-  src/AST/VariableDeclarationNode.cpp
-  src/AST/AssigmentNode.cpp
-  #src/AST/ArithmeticExpressionNode.cpp
+  src/ast/Ast.cpp
+  src/ast/RootNode.cpp
+  src/ast/ValueNode.cpp
+  src/ast/VariableNode.cpp
+  src/ast/VariableDeclarationNode.cpp
+  src/ast/AssigmentNode.cpp
+  src/ast/ArithmeticExpressionNode.cpp
 )
 
 add_executable(${PROJECT_NAME} ${SOURCES} ${HEADERS})

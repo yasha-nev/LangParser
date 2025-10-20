@@ -1,7 +1,6 @@
 #pragma once
 
 #include "Ast.hpp"
-#include "VariableNode.hpp"
 
 enum class DeclaretionType {
     INT,
@@ -9,21 +8,27 @@ enum class DeclaretionType {
     BOOL,
 };
 
+std::string declarationTypeToString(DeclaretionType type);
+
 class VariableDeclarationNode: public ASTNode {
 public:
-    VariableDeclarationNode();
+    VariableDeclarationNode(int deep);
 
-    VariableDeclarationNode(DeclaretionType variable_type);
+    VariableDeclarationNode(int deep, DeclaretionType variable_type);
 
-    DeclaretionType getVariablesType();
+    ASTNode *process(ASTNode *parent, const EarleyItem &eItem, int deep) override;
+
+    void addNode(std::unique_ptr<ASTNode> node) override;
+
+    void printNode() override;
 
     void setVariablesType(DeclaretionType type);
 
-    const std::list<std::unique_ptr<VariableNode>>& getVariables();
+    const std::list<std::unique_ptr<ASTNode>>& getVariables();
 
-    void addVariable(std::unique_ptr<VariableNode> variable);
+    DeclaretionType getVariablesType();
 
 private:
-    std::list<std::unique_ptr<VariableNode>> m_variables;
+    std::list<std::unique_ptr<ASTNode>> m_variables;
     DeclaretionType m_variableType;
 };

@@ -33,9 +33,6 @@ void Parser::parsing() {
                   << "\n";
         return;
     }
-
-    std::cout << "----NO ERROR FOUND PROGRAM IS TRUE----"
-              << "\n";
 }
 
 void Parser::printLineScan(int line, const Lexem& token, std::set<EarleyItem>& D) {
@@ -45,7 +42,6 @@ void Parser::printLineScan(int line, const Lexem& token, std::set<EarleyItem>& D
     for(const auto& d: D) {
         std::cout << d << "\n";
     }
-    std::cout << "\n";
 }
 
 void Parser::scan(
@@ -150,9 +146,13 @@ void Parser::complite(std::vector<std::set<EarleyItem>>& D, int pos) {
 }
 
 void Parser::printTree() {
-    std::cout << "-------------Parse Tree---------------"
+    std::cout << "GRAMMATICAL SEQUENCE"
               << "\n";
     for(const auto& d: m_parseTree) {
-        std::cout << d << "\n";
+        std::cout << d;
     }
+}
+
+std::set<EarleyItem>& Parser::getParserOutput() {
+    return m_parseTree;
 }
