@@ -1,6 +1,6 @@
 #include "EarleyItem.hpp"
 
-EarleyItem::EarleyItem(std::string vn, std::vector<std::string> rule, int point, int number) {
+EarleyItem::EarleyItem(int vn, std::vector<int> rule, int point, int number) {
     m_vn = vn;
     m_point = point;
     m_number = number;
@@ -10,7 +10,7 @@ EarleyItem::EarleyItem(std::string vn, std::vector<std::string> rule, int point,
     }
 }
 
-std::string EarleyItem::getVn() const {
+int EarleyItem::getVn() const {
     return m_vn;
 }
 
@@ -29,12 +29,9 @@ void EarleyItem::movePoint() {
 }
 
 std::ostream& operator<<(std::ostream& os, const EarleyItem& eItem) {
-    size_t n = eItem.m_vn.size();
-
     os << eItem.m_vn << " -> ";
 
     for(int i = 0; i < eItem.m_rule.size(); i++) {
-        n += eItem.m_rule[i].size() + 1;
         if(eItem.m_point == i) {
             std::cout << "*";
         }
@@ -43,19 +40,19 @@ std::ostream& operator<<(std::ostream& os, const EarleyItem& eItem) {
     if(eItem.checkEnd()) {
         std::cout << "*";
     }
-    os << std::string(30 - n, ' ') << " | " << eItem.m_point << " | " << eItem.m_number << "\n";
+    os << std::string(30, ' ') << " | " << eItem.m_point << " | " << eItem.m_number << "\n";
 
     return os;
 }
 
-std::string EarleyItem::getQueueRule() const {
+int EarleyItem::getQueueRule() const {
     if(checkEnd() == 1) {
-        return "";
+        return -1;
     }
     return m_rule[m_point];
 }
 
-std::vector<std::string> EarleyItem::getRule() const {
+std::vector<int> EarleyItem::getRule() const {
     return m_rule;
 }
 

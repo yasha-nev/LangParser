@@ -22,7 +22,7 @@ public:
      * @param tokens Reference to a list of tokens.
      * @param grammar Reference to the grammar object.
      */
-    Parser(std::vector<Lexem>& tokens, Grammar& grammar);
+    Parser(std::vector<Lexem>& tokens, Vocabulary &vocabulary, Grammar& grammar);
 
     void parsing();
 
@@ -40,6 +40,8 @@ private:
     void throwUnexpectedToken(const Lexem& preToken, const std::set<EarleyItem>& P_D) const;
 
     void printLineScan(int line, const Lexem& token, std::set<EarleyItem>& D);
+
+    Vocabulary &m_vocabulary;
 
     Grammar& m_grammar;
 

@@ -5,15 +5,15 @@
 
 Application::Application(const std::string& grammarFile, const std::string& vocabFile):
     m_vocabulary(VocabularyLoader::loadFromJson(vocabFile)),
-    m_grammar(GrammarLoader::loadFromJson(grammarFile)),
+    m_grammar(GrammarLoader::loadFromJson(grammarFile, m_vocabulary)),
     m_lexer(m_vocabulary),
-    m_parser(m_lexer.getTokens(), m_grammar) {
+    m_parser(m_lexer.getTokens(), m_vocabulary,  m_grammar) {
 }
 
 void Application::run(const std::string& sourceFile) {
     m_lexer.fileCodeAnalysis(sourceFile);
     m_parser.parsing();
     m_parser.printTree();
-    AST ast;
-    ast.buildTree(m_lexer.getTokens(), m_parser.getParserOutput());
+    //AST ast;
+    //ast.buildTree(m_lexer.getTokens(), m_parser.getParserOutput());
 }

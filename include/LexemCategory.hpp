@@ -5,6 +5,7 @@
  * @brief Defines categories of lexical tokens.
  */
 enum class LexemCategory {
+    NOTERMINAL,
     OPERATOR,
     CONDITION,
     LOGIC,

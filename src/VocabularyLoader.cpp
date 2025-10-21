@@ -15,7 +15,9 @@ Vocabulary VocabularyLoader::loadFromJson(const std::string& filePath) {
         const std::string& categoryName = it.key();
         LexemCategory category;
 
-        if(categoryName == "OPERATOR") {
+        if(categoryName == "NOTERMINAL") {
+            category = LexemCategory::NOTERMINAL;
+        } else if(categoryName == "OPERATOR") {
             category = LexemCategory::OPERATOR;
         } else if(categoryName == "CONDITION") {
             category = LexemCategory::CONDITION;

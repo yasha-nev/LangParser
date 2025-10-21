@@ -1,5 +1,6 @@
 {
   "vocabulary": {
+    "NOTERMINAL": ["1A", "A0", "A", "B", "C", "D", "E", "F", "G", "TYPES", "VALUE", "VARIABLES"],
     "OPERATOR": ["-", "\\+", "/", "\\*"],
     "CONDITION": ["<>", "=", ">=", "<=", "<", ">"],
     "LOGIC": ["not", "or", "and"],

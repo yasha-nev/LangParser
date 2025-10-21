@@ -21,19 +21,19 @@ public:
      * @param point Position of the dot in the rule.
      * @param number Input index (position in the input string).
      */
-    EarleyItem(std::string vn, std::vector<std::string> rule, int point, int number);
+    EarleyItem(int vn, std::vector<int> rule, int point, int number);
 
     /** @return Left-hand side non-terminal. */
-    std::string getVn() const;
+    int getVn() const;
 
     /** @return Position in the input string. */
     int getNumber() const;
 
     /** @return Grammar rule as a formatted string. */
-    std::string getQueueRule() const;
+    int getQueueRule() const;
 
     /** @return Grammar rule as a vector of symbols. */
-    std::vector<std::string> getRule() const;
+    std::vector<int> getRule() const;
 
     /** @brief Moves the dot one position forward. */
     void movePoint();
@@ -50,9 +50,9 @@ public:
     friend std::ostream& operator<<(std::ostream& os, const EarleyItem& earleyItem);
 
 private:
-    std::string m_vn;
+    int m_vn;
 
-    std::vector<std::string> m_rule;
+    std::vector<int> m_rule;
 
     int m_point;
 

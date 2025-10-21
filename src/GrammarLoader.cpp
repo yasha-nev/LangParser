@@ -1,6 +1,6 @@
 #include "GrammarLoader.hpp"
 
-Grammar GrammarLoader::loadFromJson(const std::string& filePath) {
+Grammar GrammarLoader::loadFromJson(const std::string& filePath, const Vocabulary &vocabulary) {
     std::ifstream file(filePath);
 
     if(!file.is_open()) {
@@ -12,15 +12,16 @@ Grammar GrammarLoader::loadFromJson(const std::string& filePath) {
     Grammar grammar;
     for(auto& it: j["rules"].items()) {
         const std::string& lhs = it.key();
-        std::vector<std::vector<std::string>> rule;
+        std::vector<std::vector<int>> rule;
         for(auto& alt: it.value()) {
-            std::vector<std::string> rhs;
+            std::vector<int> rhs;
             for(auto& symbol: alt) {
-                rhs.push_back(symbol.get<std::string>());
+                std::string v = symbol.get<std::string>();
+                rhs.push_back(vocabulary.getWordId(v));
             }
             rule.push_back(rhs);
         }
-        grammar.addRule(lhs, rule);
+        grammar.addRule(vocabulary.getWordId(lhs), rule);
     }
     file.close();
 

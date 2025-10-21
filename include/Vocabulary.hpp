@@ -8,62 +8,37 @@
 #include <unordered_set>
 #include <vector>
 
-/**
- * @class Vocabulary
- * @brief Stores and manages the vocabulary of tokens.
- */
 class Vocabulary {
 public:
-    /**
-     * @brief Adds a word to the vocabulary.
-     * @param category Token category.
-     * @param word Word string.
-     */
     void addWord(LexemCategory category, const std::string& word);
 
-    /**
-     * @brief Adds multiple words to the vocabulary.
-     * @param category Token category.
-     * @param wordList List of words.
-     */
-    void addWords(LexemCategory category, std::initializer_list<std::string> wordList);
-
-    /**
-     * @brief Checks if a word belongs to a given category.
-     * @param category Token category.
-     * @param word Word string.
-     * @return true if the word exists in the category.
-     */
     bool contains(LexemCategory category, const std::string& word) const;
 
-    /**
-     * @brief Gets the position of a word in the given category.
-     * @param category Token category.
-     * @param word Word string.
-     * @return Position index or -1 if not found.
-     */
+    int getWordId(LexemCategory category, const std::string& word) const;
+    int getWordId(const std::string& word) const;
+
+    std::string getWord(int id) const;
+    std::string getWord(LexemCategory category, int id) const;
+
     int getWordPosition(LexemCategory category, const std::string& word) const;
 
-    /**
-     * @brief Retrieves all words of the given category.
-     * @param category Token category.
-     * @return List of words.
-     */
-    std::vector<std::string> getWords(LexemCategory category) const;
-
-    /**
-     * @return List of category-pattern pairs.
-     */
-    const std::vector<std::pair<LexemCategory, std::regex>>& getPatterns() const;
+    const std::vector<std::pair<LexemCategory, std::regex>>& getPatterns();
 
 private:
-    /**
-     * @brief Rebuilds regex pattern for the given category.
-     * @param category Token category.
-     */
     void rebuildPattern(LexemCategory category);
 
-    std::unordered_map<LexemCategory, std::unordered_set<std::string>> m_words;
+    // Для быстрого поиска: category → word → id
+    std::unordered_map<LexemCategory, std::unordered_map<std::string, int>> m_words;
 
+    // Для обратного поиска: id → (category, word)
+    std::unordered_map<int, std::pair<LexemCategory, std::string>> m_reverse;
+
+    // Regex для токенизации
+    std::unordered_map<LexemCategory, std::regex> m_categoryRegex;
+
+    // Счётчик уникальных ID
+    int m_nextId = 0;
+
+    // Кэш паттернов
     std::vector<std::pair<LexemCategory, std::regex>> m_patterns;
 };

@@ -28,13 +28,13 @@ set(HEADERS
   include/Parser.hpp
   include/Vocabulary.hpp
   include/VocabularyLoader.hpp
-  include/ast/Ast.hpp
-  include/ast/RootNode.hpp
-  include/ast/ValueNode.hpp
-  include/ast/VariableNode.hpp
-  include/ast/VariableDeclarationNode.hpp
-  include/ast/AssigmentNode.hpp
-  include/ast/ArithmeticExpressionNode.hpp
+  #include/ast/Ast.hpp
+  #include/ast/RootNode.hpp
+  #include/ast/ValueNode.hpp
+  #include/ast/VariableNode.hpp
+  #include/ast/VariableDeclarationNode.hpp
+  #include/ast/AssigmentNode.hpp
+  #include/ast/ArithmeticExpressionNode.hpp
 )
 
 set(SOURCES
@@ -48,13 +48,13 @@ set(SOURCES
   src/Parser.cpp
   src/Vocabulary.cpp
   src/VocabularyLoader.cpp
-  src/ast/Ast.cpp
-  src/ast/RootNode.cpp
-  src/ast/ValueNode.cpp
-  src/ast/VariableNode.cpp
-  src/ast/VariableDeclarationNode.cpp
-  src/ast/AssigmentNode.cpp
-  src/ast/ArithmeticExpressionNode.cpp
+  #src/ast/Ast.cpp
+  #src/ast/RootNode.cpp
+  #src/ast/ValueNode.cpp
+  #src/ast/VariableNode.cpp
+  #src/ast/VariableDeclarationNode.cpp
+  #src/ast/AssigmentNode.cpp
+  #src/ast/ArithmeticExpressionNode.cpp
 )
 
 add_executable(${PROJECT_NAME} ${SOURCES} ${HEADERS})
