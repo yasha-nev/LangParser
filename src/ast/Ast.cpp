@@ -88,6 +88,7 @@ void AST::buildTreeRecursive(ASTNode* node, eItemCurrent& it, eItemEnd& end) {
             } else if(rule == "+" || rule == "-" || rule == "*" || rule == "//") {
                 gNode->setOperator(rule);
             } else if(rule == "VALUE") {
+                std::cout << "build value\n";
                 buildValue(node);
             } else if(rule == "VARIABLES") {
                 buildVariable(node);

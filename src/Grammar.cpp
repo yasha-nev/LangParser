@@ -1,6 +1,6 @@
 #include "Grammar.hpp"
 
-void Grammar::addRule(int rule, const std::vector<std::vector<int>> &rhs) {
+void Grammar::addRule(int rule, const std::vector<std::vector<int>>& rhs) {
     auto& vec = m_rules[rule];
     vec.insert(vec.end(), rhs.begin(), rhs.end());
 }
@@ -15,11 +15,10 @@ const std::vector<std::vector<int>>& Grammar::getRule(int rule) const noexcept {
     }
 }
 
-const std::map<int, std::vector<std::vector<int>>>& Grammar::getAllRules()
-    const noexcept {
+const std::map<int, std::vector<std::vector<int>>>& Grammar::getAllRules() const noexcept {
     return m_rules;
 }
 
-int Grammar::getCountElementsInRule(int rule) const noexcept{
+int Grammar::getCountElementsInRule(int rule) const noexcept {
     return m_rules.count(rule);
 }

@@ -40,9 +40,9 @@ int Vocabulary::getWordId(LexemCategory category, const std::string& word) const
 }
 
 int Vocabulary::getWordId(const std::string& word) const noexcept {
-    for (const auto &[category, words] : m_words) {
+    for(const auto& [category, words]: m_words) {
         auto it = words.find(word);
-        if (it != words.end()) {
+        if(it != words.end()) {
             return (*it).second;
         }
     }

@@ -1,26 +1,26 @@
 #include "Lexem.hpp"
 
-Lexem::Lexem(int position, int positionInRow, std::string name, LexemCategory type):
+Lexem::Lexem(LexemCategory type, int wordId, int position, int lineNumber):
     m_type(type),
-    m_name(name),
+    m_wordId(wordId),
     m_position(position),
-    m_positionInRow(positionInRow) {
+    m_lineNumber(lineNumber) {
 }
 
-int Lexem::getPosition() const {
+LexemCategory Lexem::getType() const noexcept {
+    return m_type;
+}
+
+int Lexem::getWordId() const noexcept {
+    return m_wordId;
+}
+
+int Lexem::getPosition() const noexcept {
     return m_position;
 }
 
-int Lexem::getPositionInRow() const {
-    return m_positionInRow;
-}
-
-std::string Lexem::getName() const {
-    return m_name;
-}
-
-LexemCategory Lexem::getType() const {
-    return m_type;
+int Lexem::getLineNumber() const noexcept {
+    return m_lineNumber;
 }
 
 static std::string category2String(LexemCategory lexemCategory) {
@@ -53,17 +53,11 @@ static std::string category2String(LexemCategory lexemCategory) {
 std::ostream& operator<<(std::ostream& os, const Lexem& lexem) {
     std::cout << "----Token-----"
               << "\n";
-    std::cout << "name: " << lexem.m_name << "\n";
+    std::cout << "name: " << lexem.m_wordId << "\n";
     std::cout << "type: " << category2String(lexem.m_type) << "\n";
     std::cout << "id: " << lexem.getPosition() << "\n";
     std::cout << "--------------"
               << "\n";
     std::cout << "\n";
     return os;
-}
-
-std::string operator+(std::string& left, std::string& right) {
-    std::string n = left;
-    n.append(right);
-    return n;
 }

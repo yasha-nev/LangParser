@@ -31,7 +31,7 @@ void Lexer::tokenizeStringLine(const std::string& str, int numberOfString) {
 
             if(std::regex_search(sup_str, m, regex)) {
 
-                if(category == LexemCategory::VARIABLES) {
+                if(category == LexemCategory::VARIABLES || category == LexemCategory::VALUE) {
                     if(!m_vocabulary.contains(category, m[0])) {
                         m_vocabulary.addWord(category, m[0].str());
                     }
@@ -39,10 +39,10 @@ void Lexer::tokenizeStringLine(const std::string& str, int numberOfString) {
 
                 if(category != LexemCategory::SPACE) {
                     m_tokens.emplace_back(
+                        category,
+                        m_vocabulary.getWordId(category, m[0].str()),
                         m_vocabulary.getWordPosition(category, m[0].str()),
-                        numberOfString,
-                        m[0].str(),
-                        category);
+                        numberOfString);
                 }
 
                 std::string next_str = m.suffix().str();

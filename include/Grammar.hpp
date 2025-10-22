@@ -15,7 +15,7 @@ public:
      * @param rule Left-hand side non-terminal.
      * @param rhs Right-hand side alternatives (list of symbol sequences).
      */
-    void addRule(int rule, const std::vector<std::vector<int>> & rhs);
+    void addRule(int rule, const std::vector<std::vector<int>>& rhs);
 
     /**
      * @brief Retrieves rules for the given non-terminal.
@@ -27,8 +27,7 @@ public:
     /**
      * @return All grammar rules.
      */
-    const std::map<int, std::vector<std::vector<int>>>& getAllRules()
-        const noexcept;
+    const std::map<int, std::vector<std::vector<int>>>& getAllRules() const noexcept;
 
     /**
      * @brief Gets the number of elements in the given rule.

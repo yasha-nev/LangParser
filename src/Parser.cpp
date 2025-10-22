@@ -2,15 +2,18 @@
 
 #include <ctime>
 
-Parser::Parser(std::vector<Lexem>& tokens, Vocabulary &m_vocabulary, Grammar& grammar):
+Parser::Parser(std::vector<Lexem>& tokens, Vocabulary& m_vocabulary, Grammar& grammar):
     m_tokens(tokens),
     m_vocabulary(m_vocabulary),
     m_grammar(grammar) {
 }
 
 void Parser::parsing() {
-    m_tokens.push_back(
-        Lexem(-1, m_tokens[m_tokens.size() - 1].getPositionInRow(), "", LexemCategory::END));
+    m_tokens.push_back(Lexem(
+        LexemCategory::END,
+        m_vocabulary.getWordId(""),
+        -1,
+        m_tokens[m_tokens.size() - 1].getLineNumber()));
 
     std::vector<std::set<EarleyItem>> D(m_tokens.size() + 1);
     D[0].insert(EarleyItem("1A", { "A" }, 0, 0));
@@ -38,7 +41,8 @@ void Parser::parsing() {
 
 void Parser::printLineScan(int line, const Lexem& token, std::set<EarleyItem>& D) {
     std::cout << std::string(50, '-') << "\n";
-    std::cout << "line number: " << std::to_string(line) + " symbol: " << token.getName() << "\n\n";
+    std::cout << "line number: " << std::to_string(line) + " symbol: " << token.getWordId()
+              << "\n\n";
 
     for(const auto& d: D) {
         std::cout << d << "\n";
@@ -56,7 +60,7 @@ void Parser::scan(
     Lexem& preToken = m_tokens[pos - 1];
 
     for(const auto& d: P_D) {
-        if(d.getQueueRule() == preToken.getName() ||
+        if(d.getQueueRule() == m_vocabulary.getWord(preToken.getWordId()).second ||
            d.getQueueRule() == "TYPES" && preToken.getType() == LexemCategory::TYPES ||
            d.getQueueRule() == "VALUE" && preToken.getType() == LexemCategory::VALUE ||
            d.getQueueRule() == "VARIABLES" && preToken.getType() == LexemCategory::VARIABLES) {
@@ -65,10 +69,10 @@ void Parser::scan(
             C_D.insert(item);
         }
 
-        if(endItem == d && preToken.getName() != "") {
+        if(endItem == d && m_vocabulary.getWord(preToken.getWordId()).second != "") {
             throw std::invalid_argument(
-                "Row " + std::to_string(preToken.getPositionInRow()) + " symbols " +
-                preToken.getName() + " is not expected");
+                "Row " + std::to_string(preToken.getLineNumber()) + " symbols " +
+                m_vocabulary.getWord(preToken.getWordId()).second + " is not expected");
         }
     }
     if(C_D.empty()) {
@@ -95,13 +99,15 @@ void Parser::throwUnexpectedToken(const Lexem& preToken, const std::set<EarleyIt
         }
 
         throw std::invalid_argument(
-            "Error: row " + std::to_string(preToken.getPositionInRow()) + ", symbol '" +
-            preToken.getName() + "': unexpected token; expected one of " + missingRules + "");
+            "Error: row " + std::to_string(preToken.getLineNumber()) + ", symbol '" +
+            m_vocabulary.getWord(preToken.getWordId()).second +
+            "': unexpected token; expected one of " + missingRules + "");
     }
 
     throw std::invalid_argument(
-        "Error: row " + std::to_string(preToken.getPositionInRow()) + ", symbol '" +
-        preToken.getName() + "': unexpected token; no symbols expected");
+        "Error: row " + std::to_string(preToken.getLineNumber()) + ", symbol '" +
+        m_vocabulary.getWord(preToken.getWordId()).second +
+        "': unexpected token; no symbols expected");
 }
 
 void Parser::predict(std::set<EarleyItem>& D, int pos) {
@@ -110,11 +116,11 @@ void Parser::predict(std::set<EarleyItem>& D, int pos) {
     for(const auto& d: D) {
         if(m_grammar.getCountElementsInRule(m_vocabulary.getWordId(d.getQueueRule())) == 1) {
             std::string sup = d.getQueueRule();
-            
+
             // toDO early Item store int rules
-            for(auto& rule: m_grammar.getRule( m_vocabulary.getWordId(sup))) {
+            for(auto& rule: m_grammar.getRule(m_vocabulary.getWordId(sup))) {
                 std::vector<std::string> tmp;
-                for (auto r : rule) {
+                for(auto r: rule) {
                     tmp.push_back(m_vocabulary.getWord(r).second);
                 }
 

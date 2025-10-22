@@ -17,5 +17,5 @@ public:
      * @param filePath Path to the JSON file.
      * @return Grammar object.
      */
-    static Grammar loadFromJson(const std::string& filePath, const Vocabulary &vocabulary);
+    static Grammar loadFromJson(const std::string& filePath, const Vocabulary& vocabulary);
 };
