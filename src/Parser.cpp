@@ -16,7 +16,11 @@ void Parser::parsing() {
         m_tokens[m_tokens.size() - 1].getLineNumber()));
 
     std::vector<std::set<EarleyItem>> D(m_tokens.size() + 1);
-    D[0].insert(EarleyItem("1A", { "A" }, 0, 0));
+    D[0].insert(EarleyItem(
+        m_vocabulary.getWordId(LexemCategory::NOTERMINAL, "1A"),
+        { m_vocabulary.getWordId(LexemCategory::NOTERMINAL, "A") },
+        0,
+        0));
 
     try {
         for(size_t i = 0; i < m_tokens.size() + 1; i++) {
@@ -44,8 +48,10 @@ void Parser::printLineScan(int line, const Lexem& token, std::set<EarleyItem>& D
     std::cout << "line number: " << std::to_string(line) + " symbol: " << token.getWordId()
               << "\n\n";
 
+    Render render(m_vocabulary);
+
     for(const auto& d: D) {
-        std::cout << d << "\n";
+        render.renderEarleyItem(d);
     }
 }
 
@@ -56,14 +62,23 @@ void Parser::scan(
     if(pos == 0) {
         return;
     }
-    EarleyItem endItem("A", { "{", "A0", "}", "end" }, 4, 0);
+    EarleyItem endItem(
+        m_vocabulary.getWordId(LexemCategory::NOTERMINAL, "A"),
+        { m_vocabulary.getWordId(LexemCategory::NOTERMINAL, "{"),
+          m_vocabulary.getWordId(LexemCategory::NOTERMINAL, "A0"),
+          m_vocabulary.getWordId(LexemCategory::NOTERMINAL, "}") },
+        4,
+        0);
     Lexem& preToken = m_tokens[pos - 1];
 
     for(const auto& d: P_D) {
-        if(d.getQueueRule() == m_vocabulary.getWord(preToken.getWordId()).second ||
-           d.getQueueRule() == "TYPES" && preToken.getType() == LexemCategory::TYPES ||
-           d.getQueueRule() == "VALUE" && preToken.getType() == LexemCategory::VALUE ||
-           d.getQueueRule() == "VARIABLES" && preToken.getType() == LexemCategory::VARIABLES) {
+        if(d.getQueueRule() == preToken.getWordId() ||
+           d.getQueueRule() == m_vocabulary.getWordId(LexemCategory::NOTERMINAL, "TYPES") &&
+               preToken.getType() == LexemCategory::TYPES ||
+           d.getQueueRule() == m_vocabulary.getWordId(LexemCategory::NOTERMINAL, "VALUE") &&
+               preToken.getType() == LexemCategory::VALUE ||
+           d.getQueueRule() == m_vocabulary.getWordId(LexemCategory::NOTERMINAL, "VARIABLES") &&
+               preToken.getType() == LexemCategory::VARIABLES) {
             EarleyItem item = d;
             item.movePoint();
             C_D.insert(item);
@@ -81,10 +96,10 @@ void Parser::scan(
 }
 
 void Parser::throwUnexpectedToken(const Lexem& preToken, const std::set<EarleyItem>& P_D) const {
-    std::set<std::string> missingRulesSet;
+    std::set<int> missingRulesSet;
     for(const auto& d: P_D) {
-        const std::string& rule = d.getQueueRule();
-        if(m_grammar.getCountElementsInRule(m_vocabulary.getWordId(rule)) == 0 && !rule.empty()) {
+        int rule = d.getQueueRule();
+        if(m_grammar.getCountElementsInRule(rule) == 0 && rule != -1) {
             missingRulesSet.insert(rule);
         }
     }
@@ -114,17 +129,11 @@ void Parser::predict(std::set<EarleyItem>& D, int pos) {
     std::set<EarleyItem> D_sup;
 
     for(const auto& d: D) {
-        if(m_grammar.getCountElementsInRule(m_vocabulary.getWordId(d.getQueueRule())) == 1) {
-            std::string sup = d.getQueueRule();
+        if(m_grammar.getCountElementsInRule(d.getQueueRule()) == 1) {
+            int sup = d.getQueueRule();
 
-            // toDO early Item store int rules
-            for(auto& rule: m_grammar.getRule(m_vocabulary.getWordId(sup))) {
-                std::vector<std::string> tmp;
-                for(auto r: rule) {
-                    tmp.push_back(m_vocabulary.getWord(r).second);
-                }
-
-                EarleyItem item(sup, tmp, 0, pos);
+            for(auto& rule: m_grammar.getRule(sup)) {
+                EarleyItem item(sup, rule, 0, pos);
                 D_sup.insert(item);
             }
         }
@@ -159,10 +168,11 @@ void Parser::complite(std::vector<std::set<EarleyItem>>& D, int pos) {
 }
 
 void Parser::printTree() {
+    Render render(m_vocabulary);
     std::cout << "GRAMMATICAL SEQUENCE"
               << "\n";
     for(const auto& d: m_parseTree) {
-        std::cout << d;
+        render.renderEarleyItem(d);
     }
 }
 

@@ -4,6 +4,7 @@
 #include "EarleyItem.hpp"
 #include "Grammar.hpp"
 #include "Lexem.hpp"
+#include "Render.hpp"
 
 #include <iostream>
 #include <map>

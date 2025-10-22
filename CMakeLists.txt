@@ -26,6 +26,7 @@ set(HEADERS
   include/Lexem.hpp
   include/LexemCategory.hpp
   include/Parser.hpp
+  include/Render.hpp
   include/Vocabulary.hpp
   include/VocabularyLoader.hpp
   include/ast/Ast.hpp
@@ -46,6 +47,7 @@ set(SOURCES
   src/Lexer.cpp
   src/Lexem.cpp
   src/Parser.cpp
+  src/Render.cpp
   src/Vocabulary.cpp
   src/VocabularyLoader.cpp
   src/ast/Ast.cpp

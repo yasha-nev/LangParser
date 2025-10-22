@@ -14,6 +14,6 @@ void Application::run(const std::string& sourceFile) {
     m_lexer.fileCodeAnalysis(sourceFile);
     m_parser.parsing();
     m_parser.printTree();
-    AST ast;
+    AST ast(m_vocabulary);
     ast.buildTree(m_lexer.getTokens(), m_parser.getParserOutput());
 }

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "EarleyItem.hpp"
+#include "Vocabulary.hpp"
 
 #include <algorithm>
 #include <list>
@@ -45,6 +46,8 @@ class RootNode;
 
 class AST {
 public:
+    AST(Vocabulary& vocabulary);
+
     void buildTree(std::vector<Lexem>& tokens, std::set<EarleyItem>& items);
 
 private:
@@ -65,4 +68,6 @@ private:
     ASTNode* buildVariable(ASTNode* node);
 
     std::unique_ptr<ASTNode> m_root;
+
+    Vocabulary& m_vocabulary;
 };

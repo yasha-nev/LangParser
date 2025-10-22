@@ -33,14 +33,12 @@ public:
     /** @return number of the input line. */
     int getLineNumber() const noexcept;
 
-    friend std::ostream& operator<<(std::ostream& os, const Lexem& lexem);
-
 private:
     LexemCategory m_type;
 
     int m_wordId;
 
-    int m_position; // id in list
+    int m_position;
 
-    int m_lineNumber; // position in string line
+    int m_lineNumber;
 };
