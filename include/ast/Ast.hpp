@@ -5,6 +5,7 @@
 
 #include <algorithm>
 #include <list>
+#include <map>
 #include <memory>
 #include <set>
 #include <vector>

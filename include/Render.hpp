@@ -5,6 +5,7 @@
 #include "Vocabulary.hpp"
 
 #include <iostream>
+#include <sstream>
 
 class Render {
 public:
