@@ -1,6 +1,6 @@
 {
   "vocabulary": {
-    "OPERATOR": ["-", "\\+", "/", "\\*"],
+    "OPERATOR": ["-", "+", "/", "*"],
     "CONDITION": ["<>", "=", ">=", "<=", "<", ">"],
     "LOGIC": ["not", "or", "and"],
     "TYPES": ["int", "float", "bool"],
@@ -17,9 +17,10 @@
       "begin",
       "end"
     ],
-    "END": ["\\{", "\\}", ";", ":", "\\(", "\\)"],
+    "END": ["{", "}", ";", ":", "(", ")"],
     "VARIABLES": ["[a-zA-Z]+"],
     "VALUE": ["\\d+"],
-    "SPACE": ["[\\s\\n\\t]+"]
+    "SPACE": ["[\\s\\n\\t]+"],
+    "NOTERMINAL": ["1A", "A", "A0", "B", "C", "D", "E", "F", "G", "TYPES", "VARIABLES", "VALUE"]
   }
 }

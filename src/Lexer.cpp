@@ -24,9 +24,10 @@ void Lexer::tokenizeStringLine(const std::string& str, int numberOfString) {
 
     while(!sup_str.empty()) {
         bool matched = false;
-        for(const auto& kv: m_vocabulary.getPatterns()) {
-            const LexemCategory& category = kv.first;
-            const std::regex& regex = kv.second;
+        for(const auto& [category, regex]: m_vocabulary.getPatterns()) {
+            if(category == LexemCategory::NOTERMINAL || category == LexemCategory::NOCATEGORY) {
+                continue;
+            }
 
             if(std::regex_search(sup_str, m, regex)) {
 

@@ -33,6 +33,8 @@ Vocabulary VocabularyLoader::loadFromJson(const std::string& filePath) {
             category = LexemCategory::VALUE;
         } else if(categoryName == "SPACE") {
             category = LexemCategory::SPACE;
+        } else if(categoryName == "NOTERMINAL") {
+            category = LexemCategory::NOTERMINAL;
         } else {
             throw std::runtime_error("Unknown category: " + categoryName);
         }

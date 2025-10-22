@@ -14,5 +14,7 @@ enum class LexemCategory {
     END_WORDS,
     VALUE,
     SPACE,
-    VARIABLES
+    VARIABLES,
+    NOTERMINAL,
+    NOCATEGORY
 };
