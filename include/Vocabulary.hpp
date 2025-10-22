@@ -63,7 +63,9 @@ private:
      */
     void rebuildPattern(LexemCategory category);
 
-    std::unordered_map<LexemCategory, std::unordered_set<std::string>> m_words;
+    std::unordered_map<LexemCategory, std::unordered_map<std::string, int>> m_words;
+
+    std::unordered_map<LexemCategory, std::unordered_map<int, std::string>> m_reverse;
 
     std::vector<std::pair<LexemCategory, std::regex>> m_patterns;
 };
