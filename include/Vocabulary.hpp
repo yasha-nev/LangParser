@@ -48,6 +48,13 @@ public:
     int getWordId(LexemCategory category, const std::string& word) const noexcept;
 
     /**
+     * @brief get id of word from vocabulary
+     * @param word - language word
+     * @return word id
+     */
+    int getWordId(const std::string& word) const noexcept;
+
+    /**
      * @brief Gets the position of a word in the given category.
      * @param category Token category.
      * @param word Word string.

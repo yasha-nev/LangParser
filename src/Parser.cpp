@@ -2,8 +2,9 @@
 
 #include <ctime>
 
-Parser::Parser(std::vector<Lexem>& tokens, Grammar& grammar):
+Parser::Parser(std::vector<Lexem>& tokens, Vocabulary &m_vocabulary, Grammar& grammar):
     m_tokens(tokens),
+    m_vocabulary(m_vocabulary),
     m_grammar(grammar) {
 }
 
@@ -79,7 +80,7 @@ void Parser::throwUnexpectedToken(const Lexem& preToken, const std::set<EarleyIt
     std::set<std::string> missingRulesSet;
     for(const auto& d: P_D) {
         const std::string& rule = d.getQueueRule();
-        if(m_grammar.getCountElementsInRule(rule) == 0 && !rule.empty()) {
+        if(m_grammar.getCountElementsInRule(m_vocabulary.getWordId(rule)) == 0 && !rule.empty()) {
             missingRulesSet.insert(rule);
         }
     }
@@ -107,11 +108,17 @@ void Parser::predict(std::set<EarleyItem>& D, int pos) {
     std::set<EarleyItem> D_sup;
 
     for(const auto& d: D) {
-        if(m_grammar.getCountElementsInRule(d.getQueueRule()) == 1) {
+        if(m_grammar.getCountElementsInRule(m_vocabulary.getWordId(d.getQueueRule())) == 1) {
             std::string sup = d.getQueueRule();
+            
+            // toDO early Item store int rules
+            for(auto& rule: m_grammar.getRule( m_vocabulary.getWordId(sup))) {
+                std::vector<std::string> tmp;
+                for (auto r : rule) {
+                    tmp.push_back(m_vocabulary.getWord(r).second);
+                }
 
-            for(auto& rule: m_grammar.getRule(sup)) {
-                EarleyItem item(sup, rule, 0, pos);
+                EarleyItem item(sup, tmp, 0, pos);
                 D_sup.insert(item);
             }
         }
