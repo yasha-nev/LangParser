@@ -29,7 +29,8 @@ set(HEADERS
   include/Render.hpp
   include/Vocabulary.hpp
   include/VocabularyLoader.hpp
-  include/ast/Ast.hpp
+  include/ast/AST.hpp
+  include/ast/ASTBuilder.hpp
   include/ast/RootNode.hpp
   include/ast/ValueNode.hpp
   include/ast/VariableNode.hpp
@@ -50,7 +51,8 @@ set(SOURCES
   src/Render.cpp
   src/Vocabulary.cpp
   src/VocabularyLoader.cpp
-  src/ast/Ast.cpp
+  src/ast/AST.cpp
+  src/ast/ASTBuilder.cpp
   src/ast/RootNode.cpp
   src/ast/ValueNode.cpp
   src/ast/VariableNode.cpp

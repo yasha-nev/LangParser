@@ -1,40 +1,30 @@
-#include "ast/Ast.hpp"
+#include "ast/ASTBuilder.hpp"
 
-#include "ast/ArithmeticExpressionNode.hpp"
-#include "ast/AssigmentNode.hpp"
-#include "ast/RootNode.hpp"
-#include "ast/ValueNode.hpp"
-#include "ast/VariableDeclarationNode.hpp"
-#include "ast/VariableNode.hpp"
-
-ASTNode::ASTNode() {
-    m_nodeType = ASTNodeType::DEFAULT;
+ASTBuilder::ASTBuilder(
+    Vocabulary& vocabulary,
+    std::vector<Lexem>& tokens,
+    std::set<EarleyItem>& eItems):
+    m_vocabulary(vocabulary),
+    m_tokens(tokens),
+    m_eItems(eItems) {
 }
 
-ASTNodeType ASTNode::getNodeType() {
-    return m_nodeType;
-}
+std::unique_ptr<AST> ASTBuilder::buildTree() {
+    m_eIemIt = m_eItems.begin();
+    m_lexemIt = m_tokens.begin();
 
-AST::AST(Vocabulary& vocabulary):
-    m_vocabulary(vocabulary) {
-}
+    auto end = m_eItems.end();
 
-void AST::buildTree(std::vector<Lexem>& tokens, std::set<EarleyItem>& eItems) {
-    ASTNode* currentNode;
+    std::unique_ptr<ASTNode> m_root = std::make_unique<RootNode>();
 
-    auto itr = eItems.begin();
-    auto end = eItems.end();
-
-    if(itr != end) {
-        buildTreeRecursive(currentNode, itr, end);
+    if(m_eIemIt != end) {
+        buildTreeRecursive(m_root.get(), m_eIemIt, end);
     }
 
-    if(m_root) {
-        m_root->printNode(0);
-    }
+    return std::make_unique<AST>(std::move(m_root));
 }
 
-void AST::buildTreeRecursive(ASTNode* node, eItemCurrent& it, eItemEnd& end) {
+void ASTBuilder::buildTreeRecursive(ASTNode* node, eItemCurrent& it, eItemEnd& end) {
     if(it == end || node == nullptr) {
         return;
     }
@@ -79,12 +69,11 @@ void AST::buildTreeRecursive(ASTNode* node, eItemCurrent& it, eItemEnd& end) {
     }
 }
 
-ASTNode* AST::buildA(ASTNode* node) {
-    m_root = std::make_unique<RootNode>();
-    return m_root.get();
+ASTNode* ASTBuilder::buildA(ASTNode* node) {
+    return node;
 }
 
-ASTNode* AST::buildB(ASTNode* node) {
+ASTNode* ASTBuilder::buildB(ASTNode* node) {
     std::unique_ptr<VariableDeclarationNode> ptr = std::make_unique<VariableDeclarationNode>();
 
     node->addNode(std::move(ptr));
@@ -93,7 +82,7 @@ ASTNode* AST::buildB(ASTNode* node) {
     return list.back().get();
 }
 
-ASTNode* AST::buildD(ASTNode* node) {
+ASTNode* ASTBuilder::buildD(ASTNode* node) {
     std::unique_ptr<AssigmentNode> assigmentNode = std::make_unique<AssigmentNode>();
 
     node->addNode(std::move(assigmentNode));
@@ -102,11 +91,11 @@ ASTNode* AST::buildD(ASTNode* node) {
     return list.back().get();
 }
 
-ASTNode* AST::buildE(ASTNode* node) {
+ASTNode* ASTBuilder::buildE(ASTNode* node) {
     return node;
 }
 
-ASTNode* AST::buildG(ASTNode* node) {
+ASTNode* ASTBuilder::buildG(ASTNode* node) {
     std::unique_ptr<ArithmeticExpressionNode>
         arithmeticExpressionNode = std::make_unique<ArithmeticExpressionNode>();
 
@@ -116,20 +105,34 @@ ASTNode* AST::buildG(ASTNode* node) {
     return list.back().get();
 }
 
-ASTNode* AST::buildValue(ASTNode* node) {
-    std::string var = "10";
+ASTNode* ASTBuilder::buildValue(ASTNode* node) {
+    std::string value = getNextValue();
 
-    std::unique_ptr<ValueNode> valueNode = std::make_unique<ValueNode>(DeclaretionType::INT, var);
+    std::unique_ptr<ValueNode> valueNode = std::make_unique<ValueNode>(DeclaretionType::INT, value);
     node->addNode(std::move(valueNode));
 
     return nullptr;
 }
 
-ASTNode* AST::buildVariable(ASTNode* node) {
-    std::string var = "aaa";
+ASTNode* ASTBuilder::buildVariable(ASTNode* node) {
+    std::string var = getNextValue();
 
     std::unique_ptr<VariableNode> variableNode = std::make_unique<VariableNode>(var);
     node->addNode(std::move(variableNode));
 
     return nullptr;
+}
+
+std::string ASTBuilder::getNextValue() {
+    std::string res = "";
+    for(m_lexemIt; m_lexemIt != m_tokens.end(); m_lexemIt++) {
+        if((*m_lexemIt).getType() == LexemCategory::VALUE ||
+           (*m_lexemIt).getType() == LexemCategory::VARIABLES) {
+            res = m_vocabulary.getWord((*m_lexemIt).getWordId()).second;
+            m_lexemIt++;
+            break;
+        }
+    }
+
+    return res;
 }

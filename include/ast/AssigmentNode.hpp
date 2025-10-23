@@ -1,6 +1,8 @@
 #pragma once
 
-#include "Ast.hpp"
+#include "AST.hpp"
+
+#include <iostream>
 
 class AssigmentNode: public ASTNode {
 public:

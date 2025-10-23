@@ -1,6 +1,9 @@
 #pragma once
 
-#include "Ast.hpp"
+#include "AST.hpp"
+
+#include <iostream>
+#include <string>
 
 class ArithmeticExpressionNode: public ASTNode {
 public:

@@ -4,7 +4,8 @@
 #include "Lexer.hpp"
 #include "Parser.hpp"
 #include "Vocabulary.hpp"
-#include "ast/Ast.hpp"
+#include "ast/AST.hpp"
+#include "ast/ASTBuilder.hpp"
 
 #include <string>
 

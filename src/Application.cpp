@@ -14,6 +14,9 @@ void Application::run(const std::string& sourceFile) {
     m_lexer.fileCodeAnalysis(sourceFile);
     m_parser.parsing();
     m_parser.printTree();
-    AST ast(m_vocabulary);
-    ast.buildTree(m_lexer.getTokens(), m_parser.getParserOutput());
+
+    ASTBuilder astBuilder(m_vocabulary, m_lexer.getTokens(), m_parser.getParserOutput());
+    std::unique_ptr<AST> ast = astBuilder.buildTree();
+
+    ast->printTree();
 }

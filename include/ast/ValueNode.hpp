@@ -1,7 +1,10 @@
 #pragma once
 
-#include "Ast.hpp"
+#include "AST.hpp"
 #include "VariableDeclarationNode.hpp"
+
+#include <iostream>
+#include <string>
 
 class ValueNode: public ASTNode {
 public:
