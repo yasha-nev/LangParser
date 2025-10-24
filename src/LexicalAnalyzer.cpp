@@ -58,9 +58,14 @@ void LexicalAnalyzer::tokenizeStringLine(const std::string& str, int numberOfStr
         }
 
         if(!matched) {
+            throwUnexpectedSymbol(sup_str);
             break;
         }
     }
+}
+
+void LexicalAnalyzer::throwUnexpectedSymbol(const std::string& symbol) const {
+    throw std::invalid_argument("Error: symbol '" + symbol + "' is unexpected");
 }
 
 std::vector<Lexem>& LexicalAnalyzer::getTokens() {

@@ -17,10 +17,10 @@
       "begin",
       "end"
     ],
-    "END": ["{", "}", ";", ":", "(", ")"],
+    "END": ["{", "}", ";", ":", "(", ")", ","],
     "VARIABLES": ["[a-zA-Z]+"],
     "VALUE": ["\\d+"],
     "SPACE": ["[\\s\\n\\t]+"],
-    "NOTERMINAL": ["1A", "A", "A0", "B", "C", "D", "E", "F", "G", "TYPES", "VARIABLES", "VALUE"]
+    "NOTERMINAL": ["<start>", "<stmt-list>", "<stmt-seq>", "<decl-stmt>", "<control-flow-stmt>", "<assignment>", "<var-name>", "<cond-expr>", "<arithm-expr>", "<type-decl>", "<variables>", "<value>"]
   }
 }

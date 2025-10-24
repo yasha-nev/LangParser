@@ -30,35 +30,35 @@ void ASTBuilder::buildTreeRecursive(ASTNode* node, eItemCurrent& it, eItemEnd& e
     }
 
     std::map<int, std::function<void(ASTNode * node, eItemCurrent & it, eItemEnd & end)>> test = {
-        { m_vocabulary.getWordId(LexemCategory::NOTERMINAL, "A"),
+        { m_vocabulary.getWordId(LexemCategory::NOTERMINAL, "<stmt-list>"),
           [&](ASTNode* n, eItemCurrent& it, eItemEnd& end) {
               buildTreeRecursive(buildA(n), ++it, end);
           } },
-        { m_vocabulary.getWordId(LexemCategory::NOTERMINAL, "A0"),
+        { m_vocabulary.getWordId(LexemCategory::NOTERMINAL, "<stmt-seq>"),
           [&](ASTNode* n, eItemCurrent& it, eItemEnd& end) { buildTreeRecursive(n, ++it, end); } },
-        { m_vocabulary.getWordId(LexemCategory::NOTERMINAL, "B"),
+        { m_vocabulary.getWordId(LexemCategory::NOTERMINAL, "<decl-stmt>"),
           [&](ASTNode* n, eItemCurrent& it, eItemEnd& end) {
               buildTreeRecursive(buildB(n), ++it, end);
           } },
-        { m_vocabulary.getWordId(LexemCategory::NOTERMINAL, "C"),
+        { m_vocabulary.getWordId(LexemCategory::NOTERMINAL, "<control-flow-stmt>"),
           [&](ASTNode* n, eItemCurrent& it, eItemEnd& end) { buildTreeRecursive(n, ++it, end); } },
-        { m_vocabulary.getWordId(LexemCategory::NOTERMINAL, "D"),
+        { m_vocabulary.getWordId(LexemCategory::NOTERMINAL, "<assignment>"),
           [&](ASTNode* n, eItemCurrent& it, eItemEnd& end) {
               buildTreeRecursive(buildD(n), ++it, end);
           } },
-        { m_vocabulary.getWordId(LexemCategory::NOTERMINAL, "E"),
+        { m_vocabulary.getWordId(LexemCategory::NOTERMINAL, "<var-name>"),
           [&](ASTNode* n, eItemCurrent& it, eItemEnd& end) {
               buildTreeRecursive(buildE(n), ++it, end);
           } },
-        { m_vocabulary.getWordId(LexemCategory::NOTERMINAL, "G"),
+        { m_vocabulary.getWordId(LexemCategory::NOTERMINAL, "<arithm-expr>"),
           [&](ASTNode* n, eItemCurrent& it, eItemEnd& end) {
               buildTreeRecursive(buildG(n), ++it, end);
           } },
-        { m_vocabulary.getWordId(LexemCategory::NOTERMINAL, "TYPES"),
+        { m_vocabulary.getWordId(LexemCategory::NOTERMINAL, "<type-decl>"),
           [&](ASTNode* n, eItemCurrent& it, eItemEnd& end) {} },
-        { m_vocabulary.getWordId(LexemCategory::NOTERMINAL, "VALUE"),
+        { m_vocabulary.getWordId(LexemCategory::NOTERMINAL, "<value>"),
           [&](ASTNode* n, eItemCurrent& it, eItemEnd& end) { return buildValue(n); } },
-        { m_vocabulary.getWordId(LexemCategory::NOTERMINAL, "VARIABLES"),
+        { m_vocabulary.getWordId(LexemCategory::NOTERMINAL, "<variables>"),
           [&](ASTNode* n, eItemCurrent& it, eItemEnd& end) { return buildVariable(n); } }
     };
 

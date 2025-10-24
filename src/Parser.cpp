@@ -16,8 +16,8 @@ void Parser::performSyntaxAnalysis(std::vector<Lexem>& tokens) {
 
     std::vector<std::set<EarleyItem>> D(tokens.size() + 1);
     D[0].insert(EarleyItem(
-        m_vocabulary.getWordId(LexemCategory::NOTERMINAL, "1A"),
-        { m_vocabulary.getWordId(LexemCategory::NOTERMINAL, "A") },
+        m_vocabulary.getWordId(LexemCategory::NOTERMINAL, "<start>"),
+        { m_vocabulary.getWordId(LexemCategory::NOTERMINAL, "<stmt-list>") },
         0,
         0));
 
@@ -51,20 +51,20 @@ void Parser::scan(
         return;
     }
     EarleyItem endItem(
-        m_vocabulary.getWordId(LexemCategory::NOTERMINAL, "A"),
+        m_vocabulary.getWordId(LexemCategory::NOTERMINAL, "<start>"),
         { m_vocabulary.getWordId(LexemCategory::NOTERMINAL, "{"),
-          m_vocabulary.getWordId(LexemCategory::NOTERMINAL, "A0"),
+          m_vocabulary.getWordId(LexemCategory::NOTERMINAL, "<stmt-list>"),
           m_vocabulary.getWordId(LexemCategory::NOTERMINAL, "}") },
         4,
         0);
 
     for(const auto& d: P_D) {
         if(d.getQueueRule() == preToken.getWordId() ||
-           d.getQueueRule() == m_vocabulary.getWordId(LexemCategory::NOTERMINAL, "TYPES") &&
+           d.getQueueRule() == m_vocabulary.getWordId(LexemCategory::NOTERMINAL, "<type-decl>") &&
                preToken.getType() == LexemCategory::TYPES ||
-           d.getQueueRule() == m_vocabulary.getWordId(LexemCategory::NOTERMINAL, "VALUE") &&
+           d.getQueueRule() == m_vocabulary.getWordId(LexemCategory::NOTERMINAL, "<value>") &&
                preToken.getType() == LexemCategory::VALUE ||
-           d.getQueueRule() == m_vocabulary.getWordId(LexemCategory::NOTERMINAL, "VARIABLES") &&
+           d.getQueueRule() == m_vocabulary.getWordId(LexemCategory::NOTERMINAL, "<variables>") &&
                preToken.getType() == LexemCategory::VARIABLES) {
             EarleyItem item = d;
             item.movePoint();
