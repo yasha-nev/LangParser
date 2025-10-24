@@ -22,11 +22,12 @@ set(HEADERS
   include/EarleyItem.hpp
   include/Grammar.hpp
   include/GrammarLoader.hpp
-  include/Lexer.hpp
   include/Lexem.hpp
+  include/LexicalAnalyzer.hpp
   include/LexemCategory.hpp
   include/Parser.hpp
   include/Render.hpp
+  include/SymbolTableManager.hpp
   include/Vocabulary.hpp
   include/VocabularyLoader.hpp
   include/ast/AST.hpp
@@ -45,10 +46,11 @@ set(SOURCES
   src/EarleyItem.cpp
   src/Grammar.cpp
   src/GrammarLoader.cpp
-  src/Lexer.cpp
   src/Lexem.cpp
+  src/LexicalAnalyzer.cpp
   src/Parser.cpp
   src/Render.cpp
+  src/SymbolTableManager.cpp
   src/Vocabulary.cpp
   src/VocabularyLoader.cpp
   src/ast/AST.cpp

@@ -1,10 +1,10 @@
-#include "Lexer.hpp"
+#include "LexicalAnalyzer.hpp"
 
-Lexer::Lexer(Vocabulary& vocabulary):
+LexicalAnalyzer::LexicalAnalyzer(Vocabulary& vocabulary):
     m_vocabulary(vocabulary) {
 }
 
-void Lexer::fileCodeAnalysis(const std::string& filepath) {
+void LexicalAnalyzer::performLexicalAnalisis(const std::string& filepath) {
     std::ifstream file(filepath);
     if(!file) {
         throw std::runtime_error("Cannot open file: " + filepath);
@@ -18,7 +18,7 @@ void Lexer::fileCodeAnalysis(const std::string& filepath) {
     }
 }
 
-void Lexer::tokenizeStringLine(const std::string& str, int numberOfString) {
+void LexicalAnalyzer::tokenizeStringLine(const std::string& str, int numberOfString) {
     std::smatch m;
     std::string sup_str = str;
 
@@ -63,6 +63,6 @@ void Lexer::tokenizeStringLine(const std::string& str, int numberOfString) {
     }
 }
 
-std::vector<Lexem>& Lexer::getTokens() {
+std::vector<Lexem>& LexicalAnalyzer::getTokens() {
     return m_tokens;
 }

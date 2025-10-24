@@ -2,20 +2,19 @@
 
 #include <ctime>
 
-Parser::Parser(std::vector<Lexem>& tokens, Vocabulary& m_vocabulary, Grammar& grammar):
-    m_tokens(tokens),
+Parser::Parser(Vocabulary& m_vocabulary, Grammar& grammar):
     m_vocabulary(m_vocabulary),
     m_grammar(grammar) {
 }
 
-void Parser::parsing() {
-    m_tokens.push_back(Lexem(
+void Parser::performSyntaxAnalysis(std::vector<Lexem>& tokens) {
+    tokens.push_back(Lexem(
         LexemCategory::END,
         m_vocabulary.getWordId(""),
         -1,
-        m_tokens[m_tokens.size() - 1].getLineNumber()));
+        tokens[tokens.size() - 1].getLineNumber()));
 
-    std::vector<std::set<EarleyItem>> D(m_tokens.size() + 1);
+    std::vector<std::set<EarleyItem>> D(tokens.size() + 1);
     D[0].insert(EarleyItem(
         m_vocabulary.getWordId(LexemCategory::NOTERMINAL, "1A"),
         { m_vocabulary.getWordId(LexemCategory::NOTERMINAL, "A") },
@@ -23,10 +22,10 @@ void Parser::parsing() {
         0));
 
     try {
-        for(size_t i = 0; i < m_tokens.size() + 1; i++) {
+        for(size_t i = 0; i < tokens.size() + 1; i++) {
 
             if(i > 0) {
-                scan(D[i - 1], D[i], i);
+                scan(D[i - 1], D[i], tokens[i - 1], i);
             }
 
             size_t prevSize = 0;
@@ -43,21 +42,10 @@ void Parser::parsing() {
     }
 }
 
-void Parser::printLineScan(int line, const Lexem& token, std::set<EarleyItem>& D) {
-    std::cout << std::string(50, '-') << "\n";
-    std::cout << "line number: " << std::to_string(line) + " symbol: " << token.getWordId()
-              << "\n\n";
-
-    Render render(m_vocabulary);
-
-    for(const auto& d: D) {
-        render.renderEarleyItem(d);
-    }
-}
-
 void Parser::scan(
     std::set<EarleyItem>& P_D,
     std::set<EarleyItem>& C_D,
+    const Lexem& preToken,
     int pos) { // P = past, C - Current
     if(pos == 0) {
         return;
@@ -69,7 +57,6 @@ void Parser::scan(
           m_vocabulary.getWordId(LexemCategory::NOTERMINAL, "}") },
         4,
         0);
-    Lexem& preToken = m_tokens[pos - 1];
 
     for(const auto& d: P_D) {
         if(d.getQueueRule() == preToken.getWordId() ||

@@ -11,19 +11,19 @@
  * @class Lexer
  * @brief Performs lexical analysis of the source code.
  */
-class Lexer {
+class LexicalAnalyzer {
 public:
     /**
      * @brief Constructs the lexer with a given vocabulary.
      * @param vocabulary Reference to a vocabulary object.
      */
-    Lexer(Vocabulary& vocabulary);
+    LexicalAnalyzer(Vocabulary& vocabulary);
 
     /**
      * @brief Performs lexical analysis of a file.
      * @param filepath Path to the source code file.
      */
-    void fileCodeAnalysis(const std::string& filepath);
+    void performLexicalAnalisis(const std::string& filepath);
 
     /**
      * @brief Tokenizes a single line of code.

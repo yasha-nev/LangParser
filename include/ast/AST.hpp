@@ -34,8 +34,6 @@ protected:
     std::list<std::unique_ptr<ASTNode>> m_nodes;
 };
 
-class ASTBuilder;
-
 class AST {
 public:
     AST(std::unique_ptr<ASTNode> root);
@@ -44,6 +42,4 @@ public:
 
 private:
     std::unique_ptr<ASTNode> m_root;
-
-    friend ASTBuilder;
 };
