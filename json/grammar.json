@@ -6,11 +6,17 @@
       ["<var-name>", ":", "<type-decl>", ";"]
     ],
     "<control-flow-stmt>": [
-      ["while", "<cond-expr>", "do", "{", "<control-flow-stmt>", "}"],
-      ["for", "<assignment>", "to", "<arithm-expr>", "do", "{", "<control-flow-stmt>", "}"],
-      ["if", "<cond-expr>", "then", "{", "<control-flow-stmt>", "}"],
-      ["if", "<cond-expr>", "then", "{", "<control-flow-stmt>", "}", "else", "{", "<control-flow-stmt>", "}"],
+      ["<loop>"],
+      ["<branch>"],
       ["<assignment>"]
+    ],
+    "<loop>": [
+      ["while", "<cond-expr>", "do", "{", "<control-flow-stmt>", "}"],
+      ["for", "<assignment>", "to", "<arithm-expr>", "do", "{", "<control-flow-stmt>", "}"]
+    ],
+    "<branch>": [
+      ["if", "<cond-expr>", "then", "{", "<control-flow-stmt>", "}"],
+      ["if", "<cond-expr>", "then", "{", "<control-flow-stmt>", "}", "else", "{", "<control-flow-stmt>", "}"]
     ],
     "<assignment>": [["<var-name>", "=", "<arithm-expr>", ";"]],
     "<var-name>": [["<variables>"], ["<var-name>", ",", "<var-name>"], [",", "<var-name>"]],

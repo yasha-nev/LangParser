@@ -3,7 +3,9 @@
 #include "AST.hpp"
 #include "ArithmeticExpressionNode.hpp"
 #include "AssigmentNode.hpp"
+#include "ConditionExpressionNode.hpp"
 #include "EarleyItem.hpp"
+#include "LoopStatementNode.hpp"
 #include "RootNode.hpp"
 #include "ValueNode.hpp"
 #include "VariableDeclarationNode.hpp"
@@ -29,19 +31,37 @@ public:
 private:
     void buildTreeRecursive(ASTNode* node, eItemCurrent& it, eItemEnd& end);
 
-    ASTNode* buildA(ASTNode* node);
+    // NONERMINAL handlers
 
-    ASTNode* buildB(ASTNode* node);
+    ASTNode* buildStmtList(ASTNode* node);
 
-    ASTNode* buildD(ASTNode* node);
+    ASTNode* buildStmtSeq(ASTNode* node);
 
-    ASTNode* buildE(ASTNode* node);
+    ASTNode* buildAssignment(ASTNode* node);
 
-    ASTNode* buildG(ASTNode* node);
+    ASTNode* buildVarName(ASTNode* node);
+
+    ASTNode* buildArithmExpr(ASTNode* node);
+
+    ASTNode* buildConditionExptr(ASTNode* node);
+
+    ASTNode* buildLoopStmt(ASTNode* node);
 
     ASTNode* buildValue(ASTNode* node);
 
     ASTNode* buildVariable(ASTNode* node);
+
+    // OPERATOR HANDLERS
+
+    void buildOperator(ASTNode* node, int op);
+
+    // LOGINC HANDLERS
+
+    void buildLogic(ASTNode* node, int log);
+
+    // Loop Handlers
+
+    void buildLoopType(ASTNode* node, int loopType);
 
     std::string getNextValue();
 

@@ -27,14 +27,18 @@ Vocabulary VocabularyLoader::loadFromJson(const std::string& filePath) {
             category = LexemCategory::KEYWORD;
         } else if(categoryName == "END") {
             category = LexemCategory::END;
+        } else if(categoryName == "LOOP") {
+            category = LexemCategory::LOOP;
+        } else if(categoryName == "BRANCHING") {
+            category = LexemCategory::BRANCHING;
         } else if(categoryName == "VARIABLES") {
             category = LexemCategory::VARIABLES;
         } else if(categoryName == "VALUE") {
             category = LexemCategory::VALUE;
         } else if(categoryName == "SPACE") {
             category = LexemCategory::SPACE;
-        } else if(categoryName == "NOTERMINAL") {
-            category = LexemCategory::NOTERMINAL;
+        } else if(categoryName == "NONTERMINAL") {
+            category = LexemCategory::NONTERMINAL;
         } else {
             throw std::runtime_error("Unknown category: " + categoryName);
         }

@@ -4,9 +4,9 @@
 
 #include <iostream>
 
-class ArithmeticExpressionNode: public ASTNode {
+class ConditionExpressionNode: public ASTNode {
 public:
-    ArithmeticExpressionNode();
+    ConditionExpressionNode();
 
     const std::list<std::unique_ptr<ASTNode>>& getNodes() override;
 
@@ -14,8 +14,10 @@ public:
 
     void printNode(int deep) override;
 
-    void setOperator(int op);
+    void setConditionType(int conditionType);
+
+    int getConditionType();
 
 private:
-    int m_operator;
+    int m_conditionType;
 };

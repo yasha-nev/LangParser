@@ -37,7 +37,9 @@ set(HEADERS
   include/ast/VariableNode.hpp
   include/ast/VariableDeclarationNode.hpp
   include/ast/AssigmentNode.hpp
+  include/ast/LoopStatementNode.hpp
   include/ast/ArithmeticExpressionNode.hpp
+  include/ast/ConditionExpressionNode.hpp
 )
 
 set(SOURCES
@@ -60,7 +62,9 @@ set(SOURCES
   src/ast/VariableNode.cpp
   src/ast/VariableDeclarationNode.cpp
   src/ast/AssigmentNode.cpp
+  src/ast/LoopStatementNode.cpp
   src/ast/ArithmeticExpressionNode.cpp
+  src/ast/ConditionExpressionNode.cpp
 )
 
 add_executable(${PROJECT_NAME} ${SOURCES} ${HEADERS})

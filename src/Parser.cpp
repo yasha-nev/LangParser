@@ -16,29 +16,22 @@ void Parser::performSyntaxAnalysis(std::vector<Lexem>& tokens) {
 
     std::vector<std::set<EarleyItem>> D(tokens.size() + 1);
     D[0].insert(EarleyItem(
-        m_vocabulary.getWordId(LexemCategory::NOTERMINAL, "<start>"),
-        { m_vocabulary.getWordId(LexemCategory::NOTERMINAL, "<stmt-list>") },
+        m_vocabulary.getWordId(LexemCategory::NONTERMINAL, "<start>"),
+        { m_vocabulary.getWordId(LexemCategory::NONTERMINAL, "<stmt-list>") },
         0,
         0));
 
-    try {
-        for(size_t i = 0; i < tokens.size() + 1; i++) {
-
-            if(i > 0) {
-                scan(D[i - 1], D[i], tokens[i - 1], i);
-            }
-
-            size_t prevSize = 0;
-            do {
-                prevSize = D[i].size();
-                complite(D, i);
-                predict(D[i], i);
-            } while(D[i].size() != prevSize);
+    for(size_t i = 0; i < tokens.size() + 1; i++) {
+        if(i > 0) {
+            scan(D[i - 1], D[i], tokens[i - 1], i);
         }
-    } catch(std::invalid_argument& ex) {
-        std::cout << "----- ERROR: " << ex.what() << "-----"
-                  << "\n";
-        return;
+
+        size_t prevSize = 0;
+        do {
+            prevSize = D[i].size();
+            complite(D, i);
+            predict(D[i], i);
+        } while(D[i].size() != prevSize);
     }
 }
 
@@ -51,20 +44,20 @@ void Parser::scan(
         return;
     }
     EarleyItem endItem(
-        m_vocabulary.getWordId(LexemCategory::NOTERMINAL, "<start>"),
-        { m_vocabulary.getWordId(LexemCategory::NOTERMINAL, "{"),
-          m_vocabulary.getWordId(LexemCategory::NOTERMINAL, "<stmt-list>"),
-          m_vocabulary.getWordId(LexemCategory::NOTERMINAL, "}") },
+        m_vocabulary.getWordId(LexemCategory::NONTERMINAL, "<start>"),
+        { m_vocabulary.getWordId(LexemCategory::NONTERMINAL, "{"),
+          m_vocabulary.getWordId(LexemCategory::NONTERMINAL, "<stmt-list>"),
+          m_vocabulary.getWordId(LexemCategory::NONTERMINAL, "}") },
         4,
         0);
 
     for(const auto& d: P_D) {
         if(d.getQueueRule() == preToken.getWordId() ||
-           d.getQueueRule() == m_vocabulary.getWordId(LexemCategory::NOTERMINAL, "<type-decl>") &&
+           d.getQueueRule() == m_vocabulary.getWordId(LexemCategory::NONTERMINAL, "<type-decl>") &&
                preToken.getType() == LexemCategory::TYPES ||
-           d.getQueueRule() == m_vocabulary.getWordId(LexemCategory::NOTERMINAL, "<value>") &&
+           d.getQueueRule() == m_vocabulary.getWordId(LexemCategory::NONTERMINAL, "<value>") &&
                preToken.getType() == LexemCategory::VALUE ||
-           d.getQueueRule() == m_vocabulary.getWordId(LexemCategory::NOTERMINAL, "<variables>") &&
+           d.getQueueRule() == m_vocabulary.getWordId(LexemCategory::NONTERMINAL, "<variables>") &&
                preToken.getType() == LexemCategory::VARIABLES) {
             EarleyItem item = d;
             item.movePoint();

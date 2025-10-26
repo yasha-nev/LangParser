@@ -1,26 +1,22 @@
 {
   "vocabulary": {
-    "OPERATOR": ["-", "+", "/", "*"],
-    "CONDITION": ["<>", "=", ">=", "<=", "<", ">"],
+    "OPERATOR": ["-", "+", "/", "*", "="],
+    "CONDITION": ["<>", ">=", "<=", "<", ">"],
     "LOGIC": ["not", "or", "and"],
     "TYPES": ["int", "float", "bool"],
+    "LOOP": [ "for",  "while"],
+    "BRANCHING" : ["if", "else"],
     "KEYWORD": [
-      "for",
-      "while",
-      "if",
       "then",
-      "else",
       "to",
       "do",
       "read",
-      "write",
-      "begin",
-      "end"
+      "write"
     ],
     "END": ["{", "}", ";", ":", "(", ")", ","],
     "VARIABLES": ["[a-zA-Z]+"],
     "VALUE": ["\\d+"],
     "SPACE": ["[\\s\\n\\t]+"],
-    "NOTERMINAL": ["<start>", "<stmt-list>", "<stmt-seq>", "<decl-stmt>", "<control-flow-stmt>", "<assignment>", "<var-name>", "<cond-expr>", "<arithm-expr>", "<type-decl>", "<variables>", "<value>"]
+    "NONTERMINAL": ["<start>", "<stmt-list>", "<stmt-seq>", "<decl-stmt>", "<control-flow-stmt>", "<loop>", "<branch>", "<assignment>", "<var-name>", "<cond-expr>", "<arithm-expr>", "<type-decl>", "<variables>", "<value>"]
   }
 }

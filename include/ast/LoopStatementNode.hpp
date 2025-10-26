@@ -4,9 +4,9 @@
 
 #include <iostream>
 
-class ArithmeticExpressionNode: public ASTNode {
+class LoopStatementNode: public ASTNode {
 public:
-    ArithmeticExpressionNode();
+    LoopStatementNode();
 
     const std::list<std::unique_ptr<ASTNode>>& getNodes() override;
 
@@ -14,8 +14,10 @@ public:
 
     void printNode(int deep) override;
 
-    void setOperator(int op);
+    int getLoopType();
+
+    void setLoopType(int loopType);
 
 private:
-    int m_operator;
+    int m_loopType;
 };

@@ -25,7 +25,7 @@ void LexicalAnalyzer::tokenizeStringLine(const std::string& str, int numberOfStr
     while(!sup_str.empty()) {
         bool matched = false;
         for(const auto& [category, regex]: m_vocabulary.getPatterns()) {
-            if(category == LexemCategory::NOTERMINAL || category == LexemCategory::NOCATEGORY) {
+            if(category == LexemCategory::NONTERMINAL || category == LexemCategory::NOCATEGORY) {
                 continue;
             }
 
