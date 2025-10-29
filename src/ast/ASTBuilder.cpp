@@ -7,6 +7,27 @@ ASTBuilder::ASTBuilder(
     m_vocabulary(vocabulary),
     m_tokens(tokens),
     m_eItems(eItems) {
+
+    m_buildNodeFactory = {
+        { wordId("<stmt-list>"), &ASTBuilder::buildStmtList },
+        { wordId("<stmt-seq>"), [](ASTBuilder&, ASTNode* node) { return node; } },
+        { wordId("<decl-stmt>"), &ASTBuilder::buildDeclStmt },
+        { wordId("<control-flow-stmt>"), [](ASTBuilder&, ASTNode* node) { return node; } },
+        { wordId("<loop>"), &ASTBuilder::buildLoopStmt },
+        { wordId("<branch>"), &ASTBuilder::buildBranchStmt },
+        { wordId("<assignment>"), &ASTBuilder::buildAssignment },
+        { wordId("<var-name>"), &ASTBuilder::buildVarName },
+        { wordId("<arithm-expr>"), &ASTBuilder::buildArithmExpr },
+        { wordId("<cond-expr>"), &ASTBuilder::buildConditionExptr },
+        { wordId("<value>"), &ASTBuilder::buildValue },
+        { wordId("<variables>"), &ASTBuilder::buildVariable },
+        { wordId("<type-decl>"), [](ASTBuilder&, ASTNode*) { return nullptr; } },
+
+    };
+}
+
+inline int ASTBuilder::wordId(const std::string& nonterm) const {
+    return m_vocabulary.getWordId(LexemCategory::NONTERMINAL, nonterm);
 }
 
 std::unique_ptr<AST> ASTBuilder::buildTree() {
@@ -29,67 +50,40 @@ void ASTBuilder::buildTreeRecursive(ASTNode* node, eItemCurrent& it, eItemEnd& e
         return;
     }
 
-    static std::map<int, std::function<void(ASTNode * node, eItemCurrent & it, eItemEnd & end)>>
-        nonterminalHandler = {
-            { m_vocabulary.getWordId(LexemCategory::NONTERMINAL, "<stmt-list>"),
-              [&](ASTNode* n, eItemCurrent& it, eItemEnd& end) {
-                  buildTreeRecursive(buildStmtList(n), ++it, end);
-              } },
-            { m_vocabulary.getWordId(LexemCategory::NONTERMINAL, "<stmt-seq>"),
-              [&](ASTNode* n, eItemCurrent& it, eItemEnd& end) {
-                  buildTreeRecursive(n, ++it, end);
-              } },
-            { m_vocabulary.getWordId(LexemCategory::NONTERMINAL, "<decl-stmt>"),
-              [&](ASTNode* n, eItemCurrent& it, eItemEnd& end) {
-                  buildTreeRecursive(buildStmtSeq(n), ++it, end);
-              } },
-            { m_vocabulary.getWordId(LexemCategory::NONTERMINAL, "<control-flow-stmt>"),
-              [&](ASTNode* n, eItemCurrent& it, eItemEnd& end) {
-                  buildTreeRecursive(n, ++it, end);
-              } },
-            { m_vocabulary.getWordId(LexemCategory::NONTERMINAL, "<loop>"),
-              [&](ASTNode* n, eItemCurrent& it, eItemEnd& end) {
-                  buildTreeRecursive(buildLoopStmt(n), ++it, end);
-              } },
-            { m_vocabulary.getWordId(LexemCategory::NONTERMINAL, "<branch>"),
-              [&](ASTNode* n, eItemCurrent& it, eItemEnd& end) {
-                  buildTreeRecursive(buildBranchStmt(n), ++it, end);
-              } },
-            { m_vocabulary.getWordId(LexemCategory::NONTERMINAL, "<assignment>"),
-              [&](ASTNode* n, eItemCurrent& it, eItemEnd& end) {
-                  buildTreeRecursive(buildAssignment(n), ++it, end);
-              } },
-            { m_vocabulary.getWordId(LexemCategory::NONTERMINAL, "<var-name>"),
-              [&](ASTNode* n, eItemCurrent& it, eItemEnd& end) {
-                  buildTreeRecursive(buildVarName(n), ++it, end);
-              } },
-            { m_vocabulary.getWordId(LexemCategory::NONTERMINAL, "<arithm-expr>"),
-              [&](ASTNode* n, eItemCurrent& it, eItemEnd& end) {
-                  buildTreeRecursive(buildArithmExpr(n), ++it, end);
-              } },
-            { m_vocabulary.getWordId(LexemCategory::NONTERMINAL, "<cond-expr>"),
-              [&](ASTNode* n, eItemCurrent& it, eItemEnd& end) {
-                  buildTreeRecursive(buildConditionExptr(n), ++it, end);
-              } },
-            { m_vocabulary.getWordId(LexemCategory::NONTERMINAL, "<type-decl>"),
-              [&](ASTNode* n, eItemCurrent& it, eItemEnd& end) {} },
-            { m_vocabulary.getWordId(LexemCategory::NONTERMINAL, "<value>"),
-              [&](ASTNode* n, eItemCurrent& it, eItemEnd& end) { return buildValue(n); } },
-            { m_vocabulary.getWordId(LexemCategory::NONTERMINAL, "<variables>"),
-              [&](ASTNode* n, eItemCurrent& it, eItemEnd& end) { return buildVariable(n); } }
-        };
-
     for(const auto& rule: (*it).getRule()) {
-        if(m_vocabulary.getWord(rule).first == LexemCategory::NONTERMINAL) {
-            nonterminalHandler[rule](node, it, end);
-        } else if(m_vocabulary.getWord(rule).first == LexemCategory::OPERATOR) {
-            buildOperator(node, rule);
-        } else if(m_vocabulary.getWord(rule).first == LexemCategory::LOOP) {
-            buildLoopType(node, rule);
-        } else if(
-            m_vocabulary.getWord(rule).first == LexemCategory::LOGIC ||
-            m_vocabulary.getWord(rule).first == LexemCategory::CONDITION) {
-            buildConditionType(node, rule);
+
+        auto [category, name] = m_vocabulary.getWord(rule);
+
+        switch(category) {
+            case LexemCategory::NONTERMINAL: {
+                auto found = m_buildNodeFactory.find(rule);
+                if(found != m_buildNodeFactory.end()) {
+                    ASTNode* ptr = found->second(*this, node);
+                    if(ptr) {
+                        buildTreeRecursive(ptr, ++it, end);
+                    }
+                }
+                break;
+            }
+            case LexemCategory::OPERATOR: {
+                buildOperator(node, rule);
+                break;
+            }
+            case LexemCategory::LOOP: {
+                buildLoopType(node, rule);
+                break;
+            }
+            case LexemCategory::LOGIC:
+            case LexemCategory::CONDITION: {
+                buildConditionType(node, rule);
+                break;
+            }
+            case LexemCategory::BRANCHING:
+            case LexemCategory::TYPES:
+            case LexemCategory::KEYWORD:
+            default: {
+                break;
+            }
         }
     }
 }
@@ -98,22 +92,12 @@ ASTNode* ASTBuilder::buildStmtList(ASTNode* node) {
     return node;
 }
 
-ASTNode* ASTBuilder::buildStmtSeq(ASTNode* node) {
-    std::unique_ptr<VariableDeclarationNode> ptr = std::make_unique<VariableDeclarationNode>();
-
-    node->addNode(std::move(ptr));
-    const auto& list = node->getNodes();
-
-    return list.back().get();
+ASTNode* ASTBuilder::buildDeclStmt(ASTNode* node) {
+    return addChild<VariableDeclarationNode>(node);
 }
 
 ASTNode* ASTBuilder::buildAssignment(ASTNode* node) {
-    std::unique_ptr<AssigmentNode> assigmentNode = std::make_unique<AssigmentNode>();
-
-    node->addNode(std::move(assigmentNode));
-    const auto& list = node->getNodes();
-
-    return list.back().get();
+    return addChild<AssigmentNode>(node);
 }
 
 ASTNode* ASTBuilder::buildVarName(ASTNode* node) {
@@ -121,65 +105,40 @@ ASTNode* ASTBuilder::buildVarName(ASTNode* node) {
 }
 
 ASTNode* ASTBuilder::buildArithmExpr(ASTNode* node) {
-    std::unique_ptr<ArithmeticExpressionNode>
-        arithmeticExpressionNode = std::make_unique<ArithmeticExpressionNode>();
-
-    node->addNode(std::move(arithmeticExpressionNode));
-    const auto& list = node->getNodes();
-
-    return list.back().get();
+    return addChild<ArithmeticExpressionNode>(node);
 }
 
 ASTNode* ASTBuilder::buildConditionExptr(ASTNode* node) {
-    std::unique_ptr<ConditionExpressionNode>
-        conditionExpressionNode = std::make_unique<ConditionExpressionNode>();
-
-    node->addNode(std::move(conditionExpressionNode));
-    const auto& list = node->getNodes();
-
-    return list.back().get();
+    return addChild<ConditionExpressionNode>(node);
 }
 
 ASTNode* ASTBuilder::buildLoopStmt(ASTNode* node) {
-    std::unique_ptr<LoopStatementNode> loopStatementNode = std::make_unique<LoopStatementNode>();
-
-    node->addNode(std::move(loopStatementNode));
-    const auto& list = node->getNodes();
-
-    return list.back().get();
+    return addChild<LoopStatementNode>(node);
 }
 
 ASTNode* ASTBuilder::buildBranchStmt(ASTNode* node) {
-    std::unique_ptr<BranchNode> branchNode = std::make_unique<BranchNode>();
-
-    node->addNode(std::move(branchNode));
-    const auto& list = node->getNodes();
-
-    return list.back().get();
+    return addChild<BranchNode>(node);
 }
 
 ASTNode* ASTBuilder::buildValue(ASTNode* node) {
-    std::string value = getNextValue();
-
-    std::unique_ptr<ValueNode> valueNode = std::make_unique<ValueNode>(DeclaretionType::INT, value);
-    node->addNode(std::move(valueNode));
-
+    if(auto val = nextTokenValue({ LexemCategory::VALUE })) {
+        auto ptr = std::make_unique<ValueNode>(DeclaretionType::INT, *val);
+        node->addNode(std::move(ptr));
+    }
     return nullptr;
 }
 
 ASTNode* ASTBuilder::buildVariable(ASTNode* node) {
-    std::string var = getNextValue();
-
-    std::unique_ptr<VariableNode> variableNode = std::make_unique<VariableNode>(var);
-    node->addNode(std::move(variableNode));
-
+    if(auto val = nextTokenValue({ LexemCategory::VARIABLES })) {
+        auto ptr = std::make_unique<VariableNode>(*val);
+        node->addNode(std::move(ptr));
+    }
     return nullptr;
 }
 
 void ASTBuilder::buildOperator(ASTNode* node, int op) {
     if(node->getNodeType() == ASTNodeType::ARITHMETIC_EXPRESSION) {
         ArithmeticExpressionNode* anode = static_cast<ArithmeticExpressionNode*>(node);
-
         anode->setOperator(op);
     }
 }
@@ -200,16 +159,16 @@ void ASTBuilder::buildConditionType(ASTNode* node, int conditionType) {
     }
 }
 
-std::string ASTBuilder::getNextValue() {
-    std::string res = "";
-    for(m_lexemIt; m_lexemIt != m_tokens.end(); m_lexemIt++) {
-        if((*m_lexemIt).getType() == LexemCategory::VALUE ||
-           (*m_lexemIt).getType() == LexemCategory::VARIABLES) {
-            res = m_vocabulary.getWord((*m_lexemIt).getWordId()).second;
-            m_lexemIt++;
-            break;
+std::optional<std::string> ASTBuilder::nextTokenValue(
+    std::initializer_list<LexemCategory> categories) {
+    while(m_lexemIt != m_tokens.end()) {
+        auto type = m_lexemIt->getType();
+        if(std::find(categories.begin(), categories.end(), type) != categories.end()) {
+            std::string val = m_vocabulary.getWord(m_lexemIt->getWordId()).second;
+            ++m_lexemIt;
+            return val;
         }
+        ++m_lexemIt;
     }
-
-    return res;
+    return std::nullopt;
 }

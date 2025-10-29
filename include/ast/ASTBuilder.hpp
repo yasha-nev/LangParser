@@ -32,11 +32,19 @@ public:
 private:
     void buildTreeRecursive(ASTNode* node, eItemCurrent& it, eItemEnd& end);
 
+    template<typename NodeT>
+    ASTNode* addChild(ASTNode* parent) {
+        auto ptr = std::make_unique<NodeT>();
+        ASTNode* child = ptr.get();
+        parent->addNode(std::move(ptr));
+        return child;
+    }
+
     // NONERMINAL handlers
 
     ASTNode* buildStmtList(ASTNode* node);
 
-    ASTNode* buildStmtSeq(ASTNode* node);
+    ASTNode* buildDeclStmt(ASTNode* node);
 
     ASTNode* buildAssignment(ASTNode* node);
 
@@ -66,7 +74,7 @@ private:
 
     void buildConditionType(ASTNode* node, int conditionType);
 
-    std::string getNextValue();
+    std::optional<std::string> nextTokenValue(std::initializer_list<LexemCategory> categories);
 
     Vocabulary& m_vocabulary;
 
@@ -77,4 +85,10 @@ private:
     std::vector<Lexem>::iterator m_lexemIt;
 
     std::set<EarleyItem>::iterator m_eIemIt;
+
+    inline int wordId(const std::string& nonterm) const;
+
+    using buildNodeHandler = std::function<ASTNode*(ASTBuilder&, ASTNode*)>;
+
+    std::unordered_map<int, buildNodeHandler> m_buildNodeFactory;
 };

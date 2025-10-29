@@ -8,8 +8,7 @@
     "<control-flow-stmt>": [
       ["<loop>"],
       ["<branch>"],
-      ["<assignment>"],
-      ["<control-flow-stmt>", "<control-flow-stmt>"]
+      ["<assignment>"]
     ],
     "<loop>": [
       ["while", "(", "<cond-expr>", ")", "{", "<control-flow-stmt>", "}"],
