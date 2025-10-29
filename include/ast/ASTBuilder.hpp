@@ -3,6 +3,7 @@
 #include "AST.hpp"
 #include "ArithmeticExpressionNode.hpp"
 #include "AssigmentNode.hpp"
+#include "BranchNode.hpp"
 #include "ConditionExpressionNode.hpp"
 #include "EarleyItem.hpp"
 #include "LoopStatementNode.hpp"
@@ -47,6 +48,8 @@ private:
 
     ASTNode* buildLoopStmt(ASTNode* node);
 
+    ASTNode* buildBranchStmt(ASTNode* node);
+
     ASTNode* buildValue(ASTNode* node);
 
     ASTNode* buildVariable(ASTNode* node);
@@ -55,13 +58,13 @@ private:
 
     void buildOperator(ASTNode* node, int op);
 
-    // LOGINC HANDLERS
-
-    void buildLogic(ASTNode* node, int log);
-
     // Loop Handlers
 
     void buildLoopType(ASTNode* node, int loopType);
+
+    // Condition Handles
+
+    void buildConditionType(ASTNode* node, int conditionType);
 
     std::string getNextValue();
 

@@ -69,7 +69,7 @@ std::string Render::formatEarlyItem(const EarleyItem& eItem) const {
         ss << word << " ";
     }
 
-    ss << std::string(70 - n, ' ') << " | " << eItem.getNumber() << "\n";
+    ss << std::string(100 - n, ' ') << " | " << eItem.getNumber() << "\n";
 
     return ss.str();
 }

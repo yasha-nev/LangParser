@@ -8,24 +8,24 @@
     "<control-flow-stmt>": [
       ["<loop>"],
       ["<branch>"],
-      ["<assignment>"]
+      ["<assignment>"],
+      ["<control-flow-stmt>", "<control-flow-stmt>"]
     ],
     "<loop>": [
-      ["while", "<cond-expr>", "do", "{", "<control-flow-stmt>", "}"],
-      ["for", "<assignment>", "to", "<arithm-expr>", "do", "{", "<control-flow-stmt>", "}"]
+      ["while", "(", "<cond-expr>", ")", "{", "<control-flow-stmt>", "}"],
+      ["for", "(" ,"<assignment>", "<cond-expr>", ";", "<assignment>", ")", "{", "<control-flow-stmt>", "}"]
     ],
     "<branch>": [
-      ["if", "<cond-expr>", "then", "{", "<control-flow-stmt>", "}"],
-      ["if", "<cond-expr>", "then", "{", "<control-flow-stmt>", "}", "else", "{", "<control-flow-stmt>", "}"]
+      ["if", "(", "<cond-expr>", ")", "{", "<control-flow-stmt>", "}"],
+      ["if", "(", "<cond-expr>", ")", "{", "<control-flow-stmt>", "}", "else", "{", "<control-flow-stmt>", "}"]
     ],
     "<assignment>": [["<var-name>", "=", "<arithm-expr>", ";"]],
     "<var-name>": [["<variables>"], ["<var-name>", ",", "<var-name>"], [",", "<var-name>"]],
     "<cond-expr>": [
-      ["<cond-expr>"],
       ["(", "<cond-expr>", ")"],
       ["<cond-expr>", "or", "<cond-expr>"],
       ["<cond-expr>", "and", "<cond-expr>"],
-      ["<arithm-expr>", "=", "<arithm-expr>"],
+      ["<arithm-expr>", "==", "<arithm-expr>"],
       ["<arithm-expr>", "<", "<arithm-expr>"],
       ["<arithm-expr>", "<>", "<arithm-expr>"],
       ["<arithm-expr>", ">", "<arithm-expr>"],

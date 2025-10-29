@@ -51,6 +51,10 @@ void ASTBuilder::buildTreeRecursive(ASTNode* node, eItemCurrent& it, eItemEnd& e
               [&](ASTNode* n, eItemCurrent& it, eItemEnd& end) {
                   buildTreeRecursive(buildLoopStmt(n), ++it, end);
               } },
+            { m_vocabulary.getWordId(LexemCategory::NONTERMINAL, "<branch>"),
+              [&](ASTNode* n, eItemCurrent& it, eItemEnd& end) {
+                  buildTreeRecursive(buildBranchStmt(n), ++it, end);
+              } },
             { m_vocabulary.getWordId(LexemCategory::NONTERMINAL, "<assignment>"),
               [&](ASTNode* n, eItemCurrent& it, eItemEnd& end) {
                   buildTreeRecursive(buildAssignment(n), ++it, end);
@@ -82,8 +86,10 @@ void ASTBuilder::buildTreeRecursive(ASTNode* node, eItemCurrent& it, eItemEnd& e
             buildOperator(node, rule);
         } else if(m_vocabulary.getWord(rule).first == LexemCategory::LOOP) {
             buildLoopType(node, rule);
-        } else if(m_vocabulary.getWord(rule).first == LexemCategory::LOGIC) {
-            buildLogic(node, rule);
+        } else if(
+            m_vocabulary.getWord(rule).first == LexemCategory::LOGIC ||
+            m_vocabulary.getWord(rule).first == LexemCategory::CONDITION) {
+            buildConditionType(node, rule);
         }
     }
 }
@@ -143,6 +149,15 @@ ASTNode* ASTBuilder::buildLoopStmt(ASTNode* node) {
     return list.back().get();
 }
 
+ASTNode* ASTBuilder::buildBranchStmt(ASTNode* node) {
+    std::unique_ptr<BranchNode> branchNode = std::make_unique<BranchNode>();
+
+    node->addNode(std::move(branchNode));
+    const auto& list = node->getNodes();
+
+    return list.back().get();
+}
+
 ASTNode* ASTBuilder::buildValue(ASTNode* node) {
     std::string value = getNextValue();
 
@@ -177,11 +192,11 @@ void ASTBuilder::buildLoopType(ASTNode* node, int loopType) {
     }
 }
 
-void ASTBuilder::buildLogic(ASTNode* node, int logic) {
+void ASTBuilder::buildConditionType(ASTNode* node, int conditionType) {
     if(node->getNodeType() == ASTNodeType::CONDITION_EXPRESSION) {
         ConditionExpressionNode* cnode = static_cast<ConditionExpressionNode*>(node);
 
-        cnode->setConditionType(logic);
+        cnode->setConditionType(conditionType);
     }
 }
 
