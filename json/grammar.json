@@ -1,24 +1,26 @@
 {
   "rules": {
     "<stmt-list>": [["{", "<stmt-seq>", "}"]],
-    "<stmt-seq>": [["<stmt-seq>", "<stmt-seq>"], ["<decl-stmt>"], ["<control-flow-stmt>"]],
+    "<stmt-seq>": [["<stmt-seq>", "<stmt-seq>"], ["<stmt>"]],
+    
+    "<stmt>": [
+      ["<decl-stmt>"],
+      ["<assignment-stmt>"],
+      ["<loop-stmt>"],
+      ["<branch-stmt>"]
+    ],
+    "<assignment-stmt>": [["<var-name>", "=", "<arithm-expr>", ";"]],
     "<decl-stmt>": [
       ["<var-name>", ":", "<type-decl>", ";"]
     ],
-    "<control-flow-stmt>": [
-      ["<loop>"],
-      ["<branch>"],
-      ["<assignment>"]
+    "<loop-stmt>": [
+      ["while", "(", "<cond-expr>", ")", "{", "<stmt-seq>", "}"],
+      ["for", "(" ,"<assignment-stmt>", "<cond-expr>", ";", "<assignment-stmt>", ")", "{", "<stmt-seq>", "}"]
     ],
-    "<loop>": [
-      ["while", "(", "<cond-expr>", ")", "{", "<control-flow-stmt>", "}"],
-      ["for", "(" ,"<assignment>", "<cond-expr>", ";", "<assignment>", ")", "{", "<control-flow-stmt>", "}"]
+    "<branch-stmt>": [
+      ["if", "(", "<cond-expr>", ")", "{", "<stmt-seq>", "}"],
+      ["if", "(", "<cond-expr>", ")", "{", "<stmt-seq>", "}", "else", "{", "<stmt-seq>", "}"]
     ],
-    "<branch>": [
-      ["if", "(", "<cond-expr>", ")", "{", "<control-flow-stmt>", "}"],
-      ["if", "(", "<cond-expr>", ")", "{", "<control-flow-stmt>", "}", "else", "{", "<control-flow-stmt>", "}"]
-    ],
-    "<assignment>": [["<var-name>", "=", "<arithm-expr>", ";"]],
     "<var-name>": [["<variables>"], ["<var-name>", ",", "<var-name>"], [",", "<var-name>"]],
     "<cond-expr>": [
       ["(", "<cond-expr>", ")"],

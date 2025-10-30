@@ -40,16 +40,10 @@ void Parser::scan(
     std::set<EarleyItem>& C_D,
     const Lexem& preToken,
     int pos) { // P = past, C - Current
+
     if(pos == 0) {
         return;
     }
-    EarleyItem endItem(
-        m_vocabulary.getWordId(LexemCategory::NONTERMINAL, "<start>"),
-        { m_vocabulary.getWordId(LexemCategory::NONTERMINAL, "{"),
-          m_vocabulary.getWordId(LexemCategory::NONTERMINAL, "<stmt-list>"),
-          m_vocabulary.getWordId(LexemCategory::NONTERMINAL, "}") },
-        4,
-        0);
 
     for(const auto& d: P_D) {
         if(d.getQueueRule() == preToken.getWordId() ||
@@ -62,12 +56,6 @@ void Parser::scan(
             EarleyItem item = d;
             item.movePoint();
             C_D.insert(item);
-        }
-
-        if(endItem == d && m_vocabulary.getWord(preToken.getWordId()).second != "") {
-            throw std::invalid_argument(
-                "Row " + std::to_string(preToken.getLineNumber()) + " symbols " +
-                m_vocabulary.getWord(preToken.getWordId()).second + " is not expected");
         }
     }
     if(C_D.empty()) {
@@ -84,25 +72,25 @@ void Parser::throwUnexpectedToken(const Lexem& preToken, const std::set<EarleyIt
         }
     }
 
+    const auto& symbol = m_vocabulary.getWord(preToken.getWordId()).second;
+
     if(!missingRulesSet.empty()) {
         std::string missingRules;
         for(const auto& rule: missingRulesSet) {
             if(!missingRules.empty()) {
                 missingRules += ", ";
             }
-            missingRules += rule;
+            missingRules += m_vocabulary.getWord(rule).second;
         }
 
         throw std::invalid_argument(
-            "Error: row " + std::to_string(preToken.getLineNumber()) + ", symbol '" +
-            m_vocabulary.getWord(preToken.getWordId()).second +
-            "': unexpected token; expected one of " + missingRules + "");
+            "row " + std::to_string(preToken.getLineNumber() + 1) + ", symbol: '" + symbol +
+            "' is unexpected token; expected one of " + missingRules + "");
     }
 
     throw std::invalid_argument(
-        "Error: row " + std::to_string(preToken.getLineNumber()) + ", symbol '" +
-        m_vocabulary.getWord(preToken.getWordId()).second +
-        "': unexpected token; no symbols expected");
+        "row " + std::to_string(preToken.getLineNumber() + 1) + ", symbol: '" + symbol +
+        "' is unexpected token; no symbols expected");
 }
 
 void Parser::predict(std::set<EarleyItem>& D, int pos) {

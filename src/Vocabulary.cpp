@@ -76,7 +76,17 @@ void Vocabulary::rebuildPattern(LexemCategory category) {
 
     std::string pattern = "^(";
     bool isFirst = true;
+
+    std::vector<std::string> array;
     for(const auto& [word, wordId]: words) {
+        array.push_back(word);
+    }
+
+    std::sort(array.begin(), array.end(), [](const std::string& a, const std::string& b) {
+        return a.size() > b.size();
+    });
+
+    for(const auto& word: array) {
         if(!isFirst) {
             pattern += "|";
         }
