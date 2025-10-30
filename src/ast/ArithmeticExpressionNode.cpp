@@ -6,7 +6,7 @@ ArithmeticExpressionNode::ArithmeticExpressionNode():
     m_nodeType = ASTNodeType::ARITHMETIC_EXPRESSION;
 }
 
-const std::list<std::unique_ptr<ASTNode>>& ArithmeticExpressionNode::getNodes() {
+const std::list<std::unique_ptr<ASTNode>>& ArithmeticExpressionNode::getNodes() const noexcept {
     return m_nodes;
 }
 
@@ -17,30 +17,10 @@ void ArithmeticExpressionNode::addNode(std::unique_ptr<ASTNode> node) {
     }
 }
 
-void ArithmeticExpressionNode::printNode(int deep) {
-
-    if(m_nodes.size() == 1) {
-        m_nodes.front()->printNode(deep + 1);
-    }
-
-    else {
-        std::cout << "|" << std::string(deep, '-') << " Operator: " << m_operator << "\n";
-
-        int i = 0;
-        for(const auto& node: m_nodes) {
-            if(i == 0) {
-                std::cout << "|" << std::string(deep + 1, '-') << " Left operand:\n";
-            } else {
-                std::cout << "|" << std::string(deep + 1, '-') << " Right operand: \n";
-            }
-
-            node->printNode(deep + 2);
-
-            i++;
-        }
-    }
-}
-
 void ArithmeticExpressionNode::setOperator(int op) {
     m_operator = op;
+}
+
+int ArithmeticExpressionNode::getOperator() const noexcept {
+    return m_operator;
 }

@@ -18,8 +18,7 @@
       ["for", "(" ,"<assignment-stmt>", "<cond-expr>", ";", "<assignment-stmt>", ")", "{", "<stmt-seq>", "}"]
     ],
     "<branch-stmt>": [
-      ["if", "(", "<cond-expr>", ")", "{", "<stmt-seq>", "}"],
-      ["if", "(", "<cond-expr>", ")", "{", "<stmt-seq>", "}", "else", "{", "<stmt-seq>", "}"]
+      ["if", "(", "<cond-expr>", ")", "{", "<stmt-seq>", "}"]
     ],
     "<var-name>": [["<variables>"], ["<var-name>", ",", "<var-name>"], [",", "<var-name>"]],
     "<cond-expr>": [

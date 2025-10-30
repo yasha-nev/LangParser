@@ -6,7 +6,7 @@ ConditionExpressionNode::ConditionExpressionNode():
     m_nodeType = ASTNodeType::CONDITION_EXPRESSION;
 }
 
-const std::list<std::unique_ptr<ASTNode>>& ConditionExpressionNode::getNodes() {
+const std::list<std::unique_ptr<ASTNode>>& ConditionExpressionNode::getNodes() const noexcept {
     return m_nodes;
 }
 
@@ -18,34 +18,10 @@ void ConditionExpressionNode::addNode(std::unique_ptr<ASTNode> node) {
     }
 }
 
-void ConditionExpressionNode::printNode(int deep) {
-
-    if(m_nodes.size() == 1) {
-        m_nodes.front()->printNode(deep + 1);
-    }
-
-    else {
-        std::cout << "|" << std::string(deep, '-') << " Condition: " << m_conditionType << "\n";
-
-        int i = 0;
-        for(const auto& node: m_nodes) {
-            if(i == 0) {
-                std::cout << "|" << std::string(deep + 1, '-') << " Left operand:\n";
-            } else {
-                std::cout << "|" << std::string(deep + 1, '-') << " Right operand: \n";
-            }
-
-            node->printNode(deep + 2);
-
-            i++;
-        }
-    }
-}
-
 void ConditionExpressionNode::setConditionType(int conditionType) {
     m_conditionType = conditionType;
 }
 
-int ConditionExpressionNode::getConditionType() {
+int ConditionExpressionNode::getConditionType() const noexcept {
     return m_conditionType;
 }

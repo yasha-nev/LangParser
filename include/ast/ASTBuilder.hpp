@@ -63,6 +63,8 @@ private:
 
     ASTNode* buildVariable(ASTNode* node);
 
+    ASTNode* buildDeclaration(ASTNode* node);
+
     // OPERATOR HANDLERS
 
     void buildOperator(ASTNode* node, int op);

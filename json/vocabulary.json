@@ -1,7 +1,7 @@
 {
   "vocabulary": {
-    "OPERATOR": ["-", "+", "/", "*", "="],
-    "CONDITION": ["<>", ">=", "<=", "<", ">"],
+    "OPERATOR": ["-", "+", "/", "*"],
+    "CONDITION": ["<>", ">=", "<=", "<", ">", "==", "="],
     "LOGIC": ["not", "or", "and"],
     "TYPES": ["int", "float", "bool"],
     "LOOP": [ "for",  "while"],
@@ -17,6 +17,6 @@
     "VARIABLES": ["[a-zA-Z]+"],
     "VALUE": ["\\d+"],
     "SPACE": ["[\\s\\n\\t]+"],
-    "NONTERMINAL": ["<start>", "<stmt-list>", "<stmt-seq>", "<decl-stmt>", "<stmt>", "<loop-stmt>", "<branch-stmt>", "<assignment-stmt>", "<var-name>", "<cond-expr>", "<arithm-expr>", "<type-decl>", "<variables>", "<value>"]
+    "NONTERMINAL": ["<start>", "<stmt-list>", "<stmt-seq>", "<stmt>", "<decl-stmt>", "<loop-stmt>", "<branch-stmt>", "<assignment-stmt>", "<var-name>", "<cond-expr>", "<arithm-expr>", "<type-decl>", "<variables>", "<value>"]
   }
 }

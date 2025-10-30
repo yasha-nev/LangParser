@@ -23,13 +23,11 @@ public:
 
     virtual ~ASTNode() = default;
 
-    virtual const std::list<std::unique_ptr<ASTNode>>& getNodes() = 0;
+    virtual const std::list<std::unique_ptr<ASTNode>>& getNodes() const noexcept = 0;
 
     virtual void addNode(std::unique_ptr<ASTNode> node) = 0;
 
-    virtual void printNode(int deep) = 0;
-
-    ASTNodeType getNodeType();
+    ASTNodeType getNodeType() const noexcept;
 
 protected:
     ASTNodeType m_nodeType;
@@ -41,7 +39,7 @@ class AST {
 public:
     AST(std::unique_ptr<ASTNode> root);
 
-    void printTree();
+    const std::unique_ptr<ASTNode>& getRootNode() const noexcept;
 
 private:
     std::unique_ptr<ASTNode> m_root;

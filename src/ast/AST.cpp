@@ -4,7 +4,7 @@ ASTNode::ASTNode() {
     m_nodeType = ASTNodeType::DEFAULT;
 }
 
-ASTNodeType ASTNode::getNodeType() {
+ASTNodeType ASTNode::getNodeType() const noexcept {
     return m_nodeType;
 }
 
@@ -12,6 +12,6 @@ AST::AST(std::unique_ptr<ASTNode> root):
     m_root(std::move(root)) {
 }
 
-void AST::printTree() {
-    m_root->printNode(0);
+const std::unique_ptr<ASTNode>& AST::getRootNode() const noexcept {
+    return m_root;
 }

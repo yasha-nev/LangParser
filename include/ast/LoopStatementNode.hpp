@@ -2,19 +2,15 @@
 
 #include "AST.hpp"
 
-#include <iostream>
-
 class LoopStatementNode: public ASTNode {
 public:
     LoopStatementNode();
 
-    const std::list<std::unique_ptr<ASTNode>>& getNodes() override;
+    const std::list<std::unique_ptr<ASTNode>>& getNodes() const noexcept override;
 
     void addNode(std::unique_ptr<ASTNode> node) override;
 
-    void printNode(int deep) override;
-
-    int getLoopType();
+    int getLoopType() const noexcept;
 
     void setLoopType(int loopType);
 

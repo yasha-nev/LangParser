@@ -19,5 +19,7 @@ void Application::run(const std::string& sourceFile) {
 
     ASTBuilder astBuilder(m_vocabulary, lexicalAnalyzer.getTokens(), parser.getParserOutput());
     auto ast = astBuilder.buildTree();
-    ast->printTree();
+    Render render(m_vocabulary);
+
+    render.renderAST(ast);
 }

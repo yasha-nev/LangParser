@@ -2,32 +2,20 @@
 
 #include "AST.hpp"
 
-#include <iostream>
-
-enum class DeclaretionType {
-    INT,
-    FLOAT,
-    BOOL,
-};
-
-std::string declarationTypeToString(DeclaretionType type);
-
 class VariableDeclarationNode: public ASTNode {
 public:
     VariableDeclarationNode();
 
-    VariableDeclarationNode(DeclaretionType variable_type);
+    VariableDeclarationNode(int variableType);
 
-    const std::list<std::unique_ptr<ASTNode>>& getNodes() override;
+    const std::list<std::unique_ptr<ASTNode>>& getNodes() const noexcept override;
 
     void addNode(std::unique_ptr<ASTNode> node) override;
 
-    void printNode(int deep) override;
+    void setVariablesType(int type);
 
-    void setVariablesType(DeclaretionType type);
-
-    DeclaretionType getVariablesType();
+    int getVariablesType() const noexcept;
 
 private:
-    DeclaretionType m_variableType;
+    int m_variableType;
 };

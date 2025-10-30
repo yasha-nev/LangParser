@@ -8,23 +8,21 @@
 
 class ValueNode: public ASTNode {
 public:
-    ValueNode(DeclaretionType type, const std::string& value);
+    ValueNode(int type, const std::string& value);
 
-    const std::list<std::unique_ptr<ASTNode>>& getNodes() override;
+    const std::list<std::unique_ptr<ASTNode>>& getNodes() const noexcept override;
 
     void addNode(std::unique_ptr<ASTNode> node) override;
 
-    void printNode(int deep) override;
-
     void setValue(const std::string& value);
 
-    void setValueType(DeclaretionType valueType);
+    void setValueType(int valueType);
 
-    const std::string& getValue();
+    const std::string& getValue() const noexcept;
 
-    DeclaretionType getValueType();
+    int getValueType() const noexcept;
 
 private:
-    DeclaretionType m_valueType;
+    int m_valueType;
     std::string m_value;
 };

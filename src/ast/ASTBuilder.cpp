@@ -21,7 +21,7 @@ ASTBuilder::ASTBuilder(
         { wordId("<cond-expr>"), &ASTBuilder::buildConditionExptr },
         { wordId("<value>"), &ASTBuilder::buildValue },
         { wordId("<variables>"), &ASTBuilder::buildVariable },
-        { wordId("<type-decl>"), [](ASTBuilder&, ASTNode*) { return nullptr; } },
+        { wordId("<type-decl>"), &ASTBuilder::buildDeclaration },
 
     };
 }
@@ -51,7 +51,6 @@ void ASTBuilder::buildTreeRecursive(ASTNode* node, eItemCurrent& it, eItemEnd& e
     }
 
     for(const auto& rule: (*it).getRule()) {
-
         auto [category, name] = m_vocabulary.getWord(rule);
 
         switch(category) {
@@ -78,8 +77,9 @@ void ASTBuilder::buildTreeRecursive(ASTNode* node, eItemCurrent& it, eItemEnd& e
                 buildConditionType(node, rule);
                 break;
             }
-            case LexemCategory::BRANCHING:
+
             case LexemCategory::TYPES:
+            case LexemCategory::BRANCHING:
             case LexemCategory::KEYWORD:
             default: {
                 break;
@@ -122,7 +122,7 @@ ASTNode* ASTBuilder::buildBranchStmt(ASTNode* node) {
 
 ASTNode* ASTBuilder::buildValue(ASTNode* node) {
     if(auto val = nextTokenValue({ LexemCategory::VALUE })) {
-        auto ptr = std::make_unique<ValueNode>(DeclaretionType::INT, *val);
+        auto ptr = std::make_unique<ValueNode>(-1, *val);
         node->addNode(std::move(ptr));
     }
     return nullptr;
@@ -133,6 +133,16 @@ ASTNode* ASTBuilder::buildVariable(ASTNode* node) {
         auto ptr = std::make_unique<VariableNode>(*val);
         node->addNode(std::move(ptr));
     }
+    return nullptr;
+}
+
+ASTNode* ASTBuilder::buildDeclaration(ASTNode* node) {
+    auto val = nextTokenValue({ LexemCategory::TYPES });
+    if(val && node->getNodeType() == ASTNodeType::VARIABLE_DECLARATION) {
+        VariableDeclarationNode* vnode = static_cast<VariableDeclarationNode*>(node);
+        vnode->setVariablesType(m_vocabulary.getWordId(LexemCategory::TYPES, (*val)));
+    }
+
     return nullptr;
 }
 

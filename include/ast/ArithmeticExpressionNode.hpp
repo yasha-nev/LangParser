@@ -2,19 +2,17 @@
 
 #include "AST.hpp"
 
-#include <iostream>
-
 class ArithmeticExpressionNode: public ASTNode {
 public:
     ArithmeticExpressionNode();
 
-    const std::list<std::unique_ptr<ASTNode>>& getNodes() override;
+    const std::list<std::unique_ptr<ASTNode>>& getNodes() const noexcept override;
 
     void addNode(std::unique_ptr<ASTNode> node) override;
 
-    void printNode(int deep) override;
-
     void setOperator(int op);
+
+    int getOperator() const noexcept;
 
 private:
     int m_operator;
