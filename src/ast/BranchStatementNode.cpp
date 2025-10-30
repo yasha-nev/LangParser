@@ -1,19 +1,19 @@
-#include "ast/BranchNode.hpp"
+#include "ast/BranchStatementNode.hpp"
 
-BranchNode::BranchNode():
+BranchStatementNode::BranchStatementNode():
     ASTNode() {
     m_nodeType = ASTNodeType::BRANCH;
 }
 
-const std::list<std::unique_ptr<ASTNode>>& BranchNode::getNodes() {
+const std::list<std::unique_ptr<ASTNode>>& BranchStatementNode::getNodes() {
     return m_nodes;
 }
 
-void BranchNode::addNode(std::unique_ptr<ASTNode> node) {
+void BranchStatementNode::addNode(std::unique_ptr<ASTNode> node) {
     m_nodes.push_back(std::move(node));
 }
 
-void BranchNode::printNode(int deep) {
+void BranchStatementNode::printNode(int deep) {
     std::cout << "|" << std::string(deep, '-') << " If:\n";
 
     for(const auto& var: m_nodes) {

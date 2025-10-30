@@ -4,9 +4,9 @@
 
 #include <iostream>
 
-class BranchNode: public ASTNode {
+class BranchStatementNode: public ASTNode {
 public:
-    BranchNode();
+    BranchStatementNode();
 
     const std::list<std::unique_ptr<ASTNode>>& getNodes() override;
 

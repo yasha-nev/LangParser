@@ -41,15 +41,14 @@ bool EarleyItem::operator==(const EarleyItem& right) const noexcept {
     if(this->m_vn == right.m_vn && this->m_point == right.m_point &&
        this->m_number == right.m_number && this->m_rule.size() == right.m_rule.size()) {
 
-        bool flag = 1;
         for(size_t i = 0; i < m_rule.size(); i++) {
             if(this->m_rule[i] != right.m_rule[i]) {
-                return 0;
+                return false;
             }
         }
-        return 1;
+        return true;
     } else {
-        return 0;
+        return false;
     }
 }
 

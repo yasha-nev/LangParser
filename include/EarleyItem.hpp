@@ -52,7 +52,7 @@ private:
 
     std::vector<int> m_rule;
 
-    int m_point;
+    size_t m_point;
 
     int m_number;
 };

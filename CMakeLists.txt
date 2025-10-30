@@ -38,7 +38,7 @@ set(HEADERS
   include/ast/VariableDeclarationNode.hpp
   include/ast/AssigmentNode.hpp
   include/ast/LoopStatementNode.hpp
-  include/ast/BranchNode.hpp
+  include/ast/BranchStatementNode.hpp
   include/ast/ArithmeticExpressionNode.hpp
   include/ast/ConditionExpressionNode.hpp
 )
@@ -64,11 +64,12 @@ set(SOURCES
   src/ast/VariableDeclarationNode.cpp
   src/ast/AssigmentNode.cpp
   src/ast/LoopStatementNode.cpp
-  src/ast/BranchNode.cpp
+  src/ast/BranchStatementNode.cpp
   src/ast/ArithmeticExpressionNode.cpp
   src/ast/ConditionExpressionNode.cpp
 )
 
 add_executable(${PROJECT_NAME} ${SOURCES} ${HEADERS})
 
+target_compile_options(${PROJECT_NAME} PRIVATE -Wall -Wextra -Wpedantic -Werror)
 target_link_libraries(${PROJECT_NAME} PRIVATE nlohmann_json::nlohmann_json)

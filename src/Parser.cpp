@@ -53,12 +53,12 @@ void Parser::scan(
 
     for(const auto& d: P_D) {
         if(d.getQueueRule() == preToken.getWordId() ||
-           d.getQueueRule() == m_vocabulary.getWordId(LexemCategory::NONTERMINAL, "<type-decl>") &&
-               preToken.getType() == LexemCategory::TYPES ||
-           d.getQueueRule() == m_vocabulary.getWordId(LexemCategory::NONTERMINAL, "<value>") &&
-               preToken.getType() == LexemCategory::VALUE ||
-           d.getQueueRule() == m_vocabulary.getWordId(LexemCategory::NONTERMINAL, "<variables>") &&
-               preToken.getType() == LexemCategory::VARIABLES) {
+           (d.getQueueRule() == m_vocabulary.getWordId(LexemCategory::NONTERMINAL, "<type-decl>") &&
+            preToken.getType() == LexemCategory::TYPES) ||
+           (d.getQueueRule() == m_vocabulary.getWordId(LexemCategory::NONTERMINAL, "<value>") &&
+            preToken.getType() == LexemCategory::VALUE) ||
+           (d.getQueueRule() == m_vocabulary.getWordId(LexemCategory::NONTERMINAL, "<variables>") &&
+            preToken.getType() == LexemCategory::VARIABLES)) {
             EarleyItem item = d;
             item.movePoint();
             C_D.insert(item);

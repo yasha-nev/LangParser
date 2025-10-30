@@ -3,7 +3,7 @@
 #include "AST.hpp"
 #include "ArithmeticExpressionNode.hpp"
 #include "AssigmentNode.hpp"
-#include "BranchNode.hpp"
+#include "BranchStatementNode.hpp"
 #include "ConditionExpressionNode.hpp"
 #include "EarleyItem.hpp"
 #include "LoopStatementNode.hpp"
@@ -17,6 +17,7 @@
 #include <list>
 #include <map>
 #include <memory>
+#include <optional>
 #include <set>
 #include <vector>
 

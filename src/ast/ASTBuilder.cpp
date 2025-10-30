@@ -117,7 +117,7 @@ ASTNode* ASTBuilder::buildLoopStmt(ASTNode* node) {
 }
 
 ASTNode* ASTBuilder::buildBranchStmt(ASTNode* node) {
-    return addChild<BranchNode>(node);
+    return addChild<BranchStatementNode>(node);
 }
 
 ASTNode* ASTBuilder::buildValue(ASTNode* node) {

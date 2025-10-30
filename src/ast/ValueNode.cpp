@@ -11,7 +11,7 @@ const std::list<std::unique_ptr<ASTNode>>& ValueNode::getNodes() {
     return m_nodes;
 }
 
-void ValueNode::addNode(std::unique_ptr<ASTNode> node) {
+void ValueNode::addNode([[maybe_unused]] std::unique_ptr<ASTNode> node) {
 }
 
 void ValueNode::printNode(int deep) {
