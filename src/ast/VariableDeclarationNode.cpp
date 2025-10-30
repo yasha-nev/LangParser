@@ -27,6 +27,8 @@ void VariableDeclarationNode::addNode(std::unique_ptr<ASTNode> node) {
 
 void VariableDeclarationNode::printNode(int deep) {
     std::cout << "|" << std::string(deep, '-')
+              << " Declaration: \n";
+    std::cout << "|" << std::string(deep + 1, '-')
               << " Type: " << declarationTypeToString(m_variableType) << "\n";
     for(const auto& var: m_nodes) {
         var->printNode(deep + 1);

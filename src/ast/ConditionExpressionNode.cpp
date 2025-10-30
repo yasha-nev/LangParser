@@ -30,12 +30,12 @@ void ConditionExpressionNode::printNode(int deep) {
         int i = 0;
         for(const auto& node: m_nodes) {
             if(i == 0) {
-                std::cout << "|" << std::string(deep, '-') << " Left operand:\n";
+                std::cout << "|" << std::string(deep + 1, '-') << " Left operand:\n";
             } else {
-                std::cout << "|" << std::string(deep, '-') << " Right operand: \n";
+                std::cout << "|" << std::string(deep + 1, '-') << " Right operand: \n";
             }
 
-            node->printNode(deep + 1);
+            node->printNode(deep + 2);
 
             i++;
         }

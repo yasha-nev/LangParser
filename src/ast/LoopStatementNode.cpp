@@ -18,14 +18,14 @@ void LoopStatementNode::printNode(int deep) {
 
     for(const auto& var: m_nodes) {
         if(var->getNodeType() == ASTNodeType::ASSIGMENTS) {
-            std::cout << "|" << std::string(deep, '-') << " Assigments:\n";
-            var->printNode(deep + 1);
+            std::cout << "|" << std::string(deep + 1, '-') << " Assigments:\n";
+            var->printNode(deep + 2);
         } else if(var->getNodeType() == ASTNodeType::CONDITION_EXPRESSION) {
-            std::cout << "|" << std::string(deep, '-') << " condition:\n";
-            var->printNode(deep + 1);
+            std::cout << "|" << std::string(deep + 1, '-') << " condition:\n";
+            var->printNode(deep + 2);
         } else {
-            std::cout << "|" << std::string(deep, '-') << " Loop field:\n";
-            var->printNode(deep + 1);
+            std::cout << "|" << std::string(deep + 1, '-') << " Loop field:\n";
+            var->printNode(deep + 2);
         }
     }
 }

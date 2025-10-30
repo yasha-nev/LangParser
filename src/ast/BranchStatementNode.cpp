@@ -18,9 +18,9 @@ void BranchStatementNode::printNode(int deep) {
 
     for(const auto& var: m_nodes) {
         if(var->getNodeType() == ASTNodeType::CONDITION_EXPRESSION) {
-            std::cout << "|" << std::string(deep, '-') << " Condition\n";
+            std::cout << "|" << std::string(deep + 1, '-') << " Condition\n";
         } else {
-            std::cout << "|" << std::string(deep, '-') << " Field\n";
+            std::cout << "|" << std::string(deep + 1, '-') << " Field\n";
         }
         var->printNode(deep + 1);
     }
