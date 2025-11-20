@@ -14,35 +14,31 @@ class Lexem {
 public:
     /**
      * @brief Constructs a lexical token.
-     * @param position Position in the token list.
-     * @param positionInRow Position in the input line.
-     * @param name Token string value.
      * @param type Token category.
+     * @param wordId id of word in vocabulary.
+     * @param position Position in the token list.
+     * @param lineNumber number of the input line.
      */
-    Lexem(int position, int positionInRow, std::string name, LexemCategory type);
-
-    /** @return Position in the token list. */
-    int getPosition() const;
-
-    /** @return Position in the input line. */
-    int getPositionInRow() const;
-
-    /** @return Token string value. */
-    std::string getName() const;
+    Lexem(LexemCategory type, int wordId, int position, int lineNumber);
 
     /** @return Token category. */
-    LexemCategory getType() const;
+    LexemCategory getType() const noexcept;
 
-    friend std::ostream& operator<<(std::ostream& os, const Lexem& lexem);
+    /** @return Token string value. */
+    int getWordId() const noexcept;
+
+    /** @return Position in the token list. */
+    int getPosition() const noexcept;
+
+    /** @return number of the input line. */
+    int getLineNumber() const noexcept;
 
 private:
     LexemCategory m_type;
 
-    std::string m_name;
+    int m_wordId;
 
-    int m_position; // id in list
+    int m_position;
 
-    int m_positionInRow; // position in string line
+    int m_lineNumber;
 };
-
-std::string operator+(std::string& left, std::string& right);

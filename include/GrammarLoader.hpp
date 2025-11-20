@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Grammar.hpp"
+#include "Vocabulary.hpp"
 #include "nlohmann/json.hpp"
 
 #include <fstream>
@@ -16,5 +17,5 @@ public:
      * @param filePath Path to the JSON file.
      * @return Grammar object.
      */
-    static Grammar loadFromJson(const std::string& filePath);
+    static Grammar loadFromJson(const std::string& filePath, const Vocabulary& vocabulary);
 };

@@ -1,42 +1,46 @@
 {
   "rules": {
-    "A": [["{", "A0", "}"]],
-    "A0": [["B"], ["D"], ["B", "A0"], ["D", "A0"]],
-    "B": [
-      ["C", ":", "TYPES", ";"],
-      ["B", "B"]
+    "<stmt-list>": [["{", "<stmt-seq>", "}"]],
+    "<stmt-seq>": [["<stmt-seq>", "<stmt-seq>"], ["<stmt>"]],
+    
+    "<stmt>": [
+      ["<decl-stmt>"],
+      ["<assignment-stmt>"],
+      ["<loop-stmt>"],
+      ["<branch-stmt>"]
     ],
-    "C": [["VARIABLES"], ["C", "C"]],
-    "D": [
-      ["while", "F", "do", "{", "D", "}"],
-      ["for", "E", "to", "G", "do", "{", "D", "}"],
-      ["if", "F", "then", "{", "D", "}"],
-      ["if", "F", "then", "{", "D", "}", "else", "{", "D", "}"],
-      ["E"],
-      ["D", "D"]
+    "<assignment-stmt>": [["<var-name>", "=", "<arithm-expr>", ";"]],
+    "<decl-stmt>": [
+      ["<var-name>", ":", "<type-decl>", ";"]
     ],
-    "E": [["C", "=", "G", ";"]],
-    "F": [
-      ["F"],
-      ["(", "F", ")"],
-      ["F", "or", "F"],
-      ["F", "and", "F"],
-      ["G", "=", "G"],
-      ["G", "<", "G"],
-      ["G", "<>", "G"],
-      ["G", ">", "G"],
-      ["G", "<=", "G"],
-      ["G", ">=", "G"],
-      ["G"]
+    "<loop-stmt>": [
+      ["while", "(", "<cond-expr>", ")", "{", "<stmt-seq>", "}"],
+      ["for", "(" ,"<assignment-stmt>", "<cond-expr>", ";", "<assignment-stmt>", ")", "{", "<stmt-seq>", "}"]
     ],
-    "G": [
-      ["H"],
-      ["(", "G", ")"],
-      ["G", "+", "G"],
-      ["G", "-", "G"],
-      ["G", "*", "G"],
-      ["G", "\\", "G"]
+    "<branch-stmt>": [
+      ["if", "(", "<cond-expr>", ")", "{", "<stmt-seq>", "}"]
     ],
-    "H": [["VARIABLES"], ["VALUE"], ["not F"]]
+    "<var-name>": [["<variables>"], ["<var-name>", ",", "<var-name>"], [",", "<var-name>"]],
+    "<cond-expr>": [
+      ["(", "<cond-expr>", ")"],
+      ["<cond-expr>", "or", "<cond-expr>"],
+      ["<cond-expr>", "and", "<cond-expr>"],
+      ["<arithm-expr>", "==", "<arithm-expr>"],
+      ["<arithm-expr>", "<", "<arithm-expr>"],
+      ["<arithm-expr>", "<>", "<arithm-expr>"],
+      ["<arithm-expr>", ">", "<arithm-expr>"],
+      ["<arithm-expr>", "<=", "<arithm-expr>"],
+      ["<arithm-expr>", ">=", "<arithm-expr>"],
+      ["<arithm-expr>"]
+    ],
+    "<arithm-expr>": [
+      ["(", "<arithm-expr>", ")"],
+      ["<arithm-expr>", "+", "<arithm-expr>"],
+      ["<arithm-expr>", "-", "<arithm-expr>"],
+      ["<arithm-expr>", "*", "<arithm-expr>"],
+      ["<arithm-expr>", "\\", "<arithm-expr>"],
+      ["<variables>"],
+      ["<value>"]
+    ]
   }
 }

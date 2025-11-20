@@ -1,25 +1,22 @@
 {
   "vocabulary": {
-    "OPERATOR": ["-", "\\+", "/", "\\*"],
-    "CONDITION": ["<>", "=", ">=", "<=", "<", ">"],
+    "OPERATOR": ["-", "+", "/", "*"],
+    "CONDITION": ["<>", ">=", "<=", "<", ">", "==", "="],
     "LOGIC": ["not", "or", "and"],
     "TYPES": ["int", "float", "bool"],
+    "LOOP": [ "for",  "while"],
+    "BRANCHING" : ["if", "else"],
     "KEYWORD": [
-      "for",
-      "while",
-      "if",
       "then",
-      "else",
       "to",
       "do",
       "read",
-      "write",
-      "begin",
-      "end"
+      "write"
     ],
-    "END": ["\\{", "\\}", ";", ":", "\\(", "\\)"],
+    "END": ["{", "}", ";", ":", "(", ")", ","],
     "VARIABLES": ["[a-zA-Z]+"],
     "VALUE": ["\\d+"],
-    "SPACE": ["[\\s\\n\\t]+"]
+    "SPACE": ["[\\s\\n\\t]+"],
+    "NONTERMINAL": ["<start>", "<stmt-list>", "<stmt-seq>", "<stmt>", "<decl-stmt>", "<loop-stmt>", "<branch-stmt>", "<assignment-stmt>", "<var-name>", "<cond-expr>", "<arithm-expr>", "<type-decl>", "<variables>", "<value>"]
   }
 }

@@ -1,50 +1,66 @@
 #include "Vocabulary.hpp"
 
-void Vocabulary::addWord(LexemCategory category, const std::string& word) {
-    m_words[category].insert(word);
+#include <iostream>
+
+void Vocabulary::addWord(LexemCategory category, const std::string& word) noexcept {
+    int wordId = static_cast<int>(category) * COUNT_ID_IN_CATEGORY + m_words[category].size();
+
+    m_words[category][word] = wordId;
+    m_reverse[wordId] = std::pair<LexemCategory, std::string>(category, word);
+
     rebuildPattern(category);
 }
 
-void Vocabulary::addWords(LexemCategory category, std::initializer_list<std::string> wordList) {
-    m_words[category].insert(wordList);
-    rebuildPattern(category);
-}
-
-bool Vocabulary::contains(LexemCategory category, const std::string& word) const {
+bool Vocabulary::contains(LexemCategory category, const std::string& word) const noexcept {
     auto it = m_words.find(category);
     return it != m_words.end() && it->second.count(word) > 0;
 }
 
-static std::string removeSlash(const std::string& input) {
-    std::string result = input;
-    size_t pos = result.find('\\');
-    if(pos != std::string::npos) {
-        result.erase(pos, 1);
+const std::pair<LexemCategory, std::string>& Vocabulary::getWord(int wordId) const noexcept {
+    auto it = m_reverse.find(wordId);
+    if(it != m_reverse.end()) {
+        return (*it).second;
+    } else {
+        static auto defaultValue = std::pair<LexemCategory, std::string>(
+            LexemCategory::NOCATEGORY, "");
+        return defaultValue;
     }
-    return result;
 }
 
-int Vocabulary::getWordPosition(LexemCategory category, const std::string& word) const {
-    auto words = getWords(category);
-    for(size_t i = 0; i < words.size(); i++) {
-        if(removeSlash(words[i]) == word) {
-            return i;
+int Vocabulary::getWordId(LexemCategory category, const std::string& word) const noexcept {
+    auto it = m_words.find(category);
+
+    if(it != m_words.end()) {
+        auto it2 = (*it).second.find(word);
+
+        return (it2 != (*it).second.end()) ? (*it2).second : -1;
+    }
+
+    return -1;
+}
+
+int Vocabulary::getWordId(const std::string& word) const noexcept {
+    for(const auto& [category, words]: m_words) {
+        auto it = words.find(word);
+        if(it != words.end()) {
+            return (*it).second;
         }
     }
 
     return -1;
 }
 
-std::vector<std::string> Vocabulary::getWords(LexemCategory category) const {
-    std::vector<std::string> result;
-    auto it = m_words.find(category);
-    if(it != m_words.end()) {
-        result.insert(result.end(), it->second.begin(), it->second.end());
+int Vocabulary::getWordPosition(LexemCategory category, const std::string& word) const noexcept {
+    auto wordId = getWordId(category, word);
+
+    if(wordId != -1) {
+        return wordId - static_cast<int>(category) * COUNT_ID_IN_CATEGORY;
     }
-    return result;
+
+    return -1;
 }
 
-const std::vector<std::pair<LexemCategory, std::regex>>& Vocabulary::getPatterns() const {
+const std::vector<std::pair<LexemCategory, std::regex>>& Vocabulary::getPatterns() const noexcept {
     return m_patterns;
 }
 
@@ -56,15 +72,33 @@ void Vocabulary::rebuildPattern(LexemCategory category) {
 
     const auto& words = it->second;
 
+    static std::vector<std::string> re_exceptons = { "+", "*", "{", "}", "(", ")", "[", "]" };
+
     std::string pattern = "^(";
-    bool first = true;
-    for(auto& word: words) {
-        if(!first) {
+    bool isFirst = true;
+
+    std::vector<std::string> array;
+    for(const auto& [word, wordId]: words) {
+        array.push_back(word);
+    }
+
+    std::sort(array.begin(), array.end(), [](const std::string& a, const std::string& b) {
+        return a.size() > b.size();
+    });
+
+    for(const auto& word: array) {
+        if(!isFirst) {
             pattern += "|";
         }
-        pattern += word;
-        first = false;
+
+        if(std::find(re_exceptons.cbegin(), re_exceptons.cend(), word) != re_exceptons.cend()) {
+            pattern += "\\" + word;
+        } else {
+            pattern += word;
+        }
+        isFirst = false;
     }
+
     pattern += ")";
 
     std::regex regexPattern(pattern);

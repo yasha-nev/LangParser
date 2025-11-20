@@ -4,6 +4,7 @@
 #include "EarleyItem.hpp"
 #include "Grammar.hpp"
 #include "Lexem.hpp"
+#include "Render.hpp"
 
 #include <iostream>
 #include <map>
@@ -22,14 +23,16 @@ public:
      * @param tokens Reference to a list of tokens.
      * @param grammar Reference to the grammar object.
      */
-    Parser(std::vector<Lexem>& tokens, Grammar& grammar);
+    Parser(Vocabulary& m_vocabulary, Grammar& grammar);
 
-    void parsing();
+    void performSyntaxAnalysis(std::vector<Lexem>& m_tokens);
 
     void printTree();
 
+    std::set<EarleyItem>& getParserOutput();
+
 private:
-    void scan(std::set<EarleyItem>& P_D, std::set<EarleyItem>& C_D, int pos);
+    void scan(std::set<EarleyItem>& P_D, std::set<EarleyItem>& C_D, const Lexem& token, int pos);
 
     void predict(std::set<EarleyItem>& S, int pos);
 
@@ -37,11 +40,9 @@ private:
 
     void throwUnexpectedToken(const Lexem& preToken, const std::set<EarleyItem>& P_D) const;
 
-    void printLineScan(int line, const Lexem& token, std::set<EarleyItem>& D);
+    Vocabulary& m_vocabulary;
 
     Grammar& m_grammar;
 
     std::set<EarleyItem> m_parseTree;
-
-    std::vector<Lexem>& m_tokens;
 };

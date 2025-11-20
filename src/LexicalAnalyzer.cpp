@@ -1,10 +1,10 @@
-#include "Lexer.hpp"
+#include "LexicalAnalyzer.hpp"
 
-Lexer::Lexer(Vocabulary& vocabulary):
+LexicalAnalyzer::LexicalAnalyzer(Vocabulary& vocabulary):
     m_vocabulary(vocabulary) {
 }
 
-void Lexer::fileCodeAnalysis(const std::string& filepath) {
+void LexicalAnalyzer::performLexicalAnalisis(const std::string& filepath) {
     std::ifstream file(filepath);
     if(!file) {
         throw std::runtime_error("Cannot open file: " + filepath);
@@ -18,19 +18,20 @@ void Lexer::fileCodeAnalysis(const std::string& filepath) {
     }
 }
 
-void Lexer::tokenizeStringLine(const std::string& str, int numberOfString) {
+void LexicalAnalyzer::tokenizeStringLine(const std::string& str, int numberOfString) {
     std::smatch m;
     std::string sup_str = str;
 
     while(!sup_str.empty()) {
         bool matched = false;
-        for(const auto& kv: m_vocabulary.getPatterns()) {
-            const LexemCategory& category = kv.first;
-            const std::regex& regex = kv.second;
+        for(const auto& [category, regex]: m_vocabulary.getPatterns()) {
+            if(category == LexemCategory::NONTERMINAL || category == LexemCategory::NOCATEGORY) {
+                continue;
+            }
 
             if(std::regex_search(sup_str, m, regex)) {
 
-                if(category == LexemCategory::VARIABLES) {
+                if(category == LexemCategory::VARIABLES || category == LexemCategory::VALUE) {
                     if(!m_vocabulary.contains(category, m[0])) {
                         m_vocabulary.addWord(category, m[0].str());
                     }
@@ -38,10 +39,10 @@ void Lexer::tokenizeStringLine(const std::string& str, int numberOfString) {
 
                 if(category != LexemCategory::SPACE) {
                     m_tokens.emplace_back(
+                        category,
+                        m_vocabulary.getWordId(category, m[0].str()),
                         m_vocabulary.getWordPosition(category, m[0].str()),
-                        numberOfString,
-                        m[0].str(),
-                        category);
+                        numberOfString);
                 }
 
                 std::string next_str = m.suffix().str();
@@ -57,11 +58,16 @@ void Lexer::tokenizeStringLine(const std::string& str, int numberOfString) {
         }
 
         if(!matched) {
+            throwUnexpectedSymbol(sup_str);
             break;
         }
     }
 }
 
-std::vector<Lexem>& Lexer::getTokens() {
+void LexicalAnalyzer::throwUnexpectedSymbol(const std::string& symbol) const {
+    throw std::invalid_argument("symbol '" + symbol + "' is unexpected");
+}
+
+std::vector<Lexem>& LexicalAnalyzer::getTokens() {
     return m_tokens;
 }

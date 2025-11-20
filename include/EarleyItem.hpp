@@ -21,40 +21,38 @@ public:
      * @param point Position of the dot in the rule.
      * @param number Input index (position in the input string).
      */
-    EarleyItem(std::string vn, std::vector<std::string> rule, int point, int number);
+    EarleyItem(int vn, std::vector<int> rule, int point, int number);
 
     /** @return Left-hand side non-terminal. */
-    std::string getVn() const;
+    int getVn() const noexcept;
 
     /** @return Position in the input string. */
-    int getNumber() const;
+    int getNumber() const noexcept;
 
     /** @return Grammar rule as a formatted string. */
-    std::string getQueueRule() const;
+    int getQueueRule() const noexcept;
 
     /** @return Grammar rule as a vector of symbols. */
-    std::vector<std::string> getRule() const;
+    const std::vector<int>& getRule() const noexcept;
 
     /** @brief Moves the dot one position forward. */
-    void movePoint();
+    void movePoint() noexcept;
 
     /** @return true if the dot is at the end of the rule. */
-    bool checkEnd() const;
+    bool checkEnd() const noexcept;
 
     /** @brief Equality operator. */
-    bool operator==(const EarleyItem& right) const;
+    bool operator==(const EarleyItem& right) const noexcept;
 
     /** @brief Ordering operator (for use in sets). */
-    bool operator<(const EarleyItem& right) const;
-
-    friend std::ostream& operator<<(std::ostream& os, const EarleyItem& earleyItem);
+    bool operator<(const EarleyItem& right) const noexcept;
 
 private:
-    std::string m_vn;
+    int m_vn;
 
-    std::vector<std::string> m_rule;
+    std::vector<int> m_rule;
 
-    int m_point;
+    size_t m_point;
 
     int m_number;
 };

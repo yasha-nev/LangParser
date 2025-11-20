@@ -9,10 +9,14 @@ enum class LexemCategory {
     CONDITION,
     LOGIC,
     TYPES,
+    LOOP,
+    BRANCHING,
     KEYWORD,
     END,
     END_WORDS,
     VALUE,
     SPACE,
-    VARIABLES
+    VARIABLES,
+    NONTERMINAL,
+    NOCATEGORY
 };

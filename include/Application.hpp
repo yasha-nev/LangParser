@@ -1,9 +1,11 @@
 #pragma once
 
 #include "Grammar.hpp"
-#include "Lexer.hpp"
+#include "LexicalAnalyzer.hpp"
 #include "Parser.hpp"
 #include "Vocabulary.hpp"
+#include "ast/AST.hpp"
+#include "ast/ASTBuilder.hpp"
 
 #include <string>
 
@@ -30,8 +32,4 @@ private:
     Vocabulary m_vocabulary;
 
     Grammar m_grammar;
-
-    Lexer m_lexer;
-
-    Parser m_parser;
 };

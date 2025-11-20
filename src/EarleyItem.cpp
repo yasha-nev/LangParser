@@ -1,89 +1,66 @@
 #include "EarleyItem.hpp"
 
-EarleyItem::EarleyItem(std::string vn, std::vector<std::string> rule, int point, int number) {
+EarleyItem::EarleyItem(int vn, std::vector<int> rule, int point, int number) {
     m_vn = vn;
     m_point = point;
     m_number = number;
     m_rule.reserve(rule.size());
-    for(size_t i = 0; i < rule.size(); i++) {
-        m_rule.push_back(rule[i]);
-    }
+    m_rule.insert(m_rule.end(), rule.begin(), rule.end());
 }
 
-std::string EarleyItem::getVn() const {
+int EarleyItem::getVn() const noexcept {
     return m_vn;
 }
 
-int EarleyItem::getNumber() const {
+int EarleyItem::getNumber() const noexcept {
     return m_number;
 }
 
-bool EarleyItem::checkEnd() const {
+bool EarleyItem::checkEnd() const noexcept {
     return m_point == m_rule.size();
 }
 
-void EarleyItem::movePoint() {
+void EarleyItem::movePoint() noexcept {
     if(m_point < m_rule.size()) {
         m_point++;
     }
 }
 
-std::ostream& operator<<(std::ostream& os, const EarleyItem& eItem) {
-    size_t n = eItem.m_vn.size();
-
-    os << eItem.m_vn << " -> ";
-
-    for(int i = 0; i < eItem.m_rule.size(); i++) {
-        n += eItem.m_rule[i].size() + 1;
-        if(eItem.m_point == i) {
-            std::cout << "*";
-        }
-        std::cout << eItem.m_rule[i] << " ";
-    }
-    if(eItem.checkEnd()) {
-        std::cout << "*";
-    }
-    os << std::string(30 - n, ' ') << " | " << eItem.m_point << " | " << eItem.m_number << "\n";
-
-    return os;
-}
-
-std::string EarleyItem::getQueueRule() const {
+int EarleyItem::getQueueRule() const noexcept {
     if(checkEnd() == 1) {
-        return "";
+        return -1;
     }
     return m_rule[m_point];
 }
 
-std::vector<std::string> EarleyItem::getRule() const {
+const std::vector<int>& EarleyItem::getRule() const noexcept {
     return m_rule;
 }
 
-bool EarleyItem::operator==(const EarleyItem& right) const {
+bool EarleyItem::operator==(const EarleyItem& right) const noexcept {
     if(this->m_vn == right.m_vn && this->m_point == right.m_point &&
        this->m_number == right.m_number && this->m_rule.size() == right.m_rule.size()) {
 
-        bool flag = 1;
         for(size_t i = 0; i < m_rule.size(); i++) {
             if(this->m_rule[i] != right.m_rule[i]) {
-                return 0;
+                return false;
             }
         }
-        return 1;
+        return true;
     } else {
-        return 0;
+        return false;
     }
 }
 
-bool EarleyItem::operator<(const EarleyItem& right) const {
+bool EarleyItem::operator<(const EarleyItem& right) const noexcept {
     if(this->m_number != right.m_number) {
         return this->m_number < right.m_number;
+    } else if(this->m_vn != right.m_vn) {
+        return (this->m_vn < right.m_vn);
     } else if(this->m_rule[0] != right.m_rule[0]) {
         return this->m_rule[0] < right.m_rule[0];
     } else if(this->m_rule.size() != right.m_rule.size()) {
         return (this->m_rule.size() > right.m_rule.size());
-    } else if(this->m_vn != right.m_vn) {
-        return (this->m_vn < right.m_vn);
     } else {
         for(size_t i = 0; i < m_rule.size(); i++) {
             if((this->m_rule[i] != right.m_rule[i])) {
